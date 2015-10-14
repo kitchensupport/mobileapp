@@ -52,7 +52,7 @@ namespace IngredientView
         {
             newQuantity = Int32.Parse(e.NewAmount);
             ingredientQuantity[0] = newQuantity;
-            ingredients[0] = "Ground Beef\n" + newQuantity;
+            ingredients[0] = e.NewName + "\n" + newQuantity;
             ArrayAdapter<string> adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, ingredients);
             listView.Adapter = adapter;
         }

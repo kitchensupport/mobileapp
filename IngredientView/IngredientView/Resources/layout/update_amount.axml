@@ -5,10 +5,27 @@
     android:layout_height="fill_parent"
     android:minWidth="225px"
     android:minHeight="25px">
+    <TextView
+        android:text="Ingredient"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView1" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText1"
+        android:id="@+id/ingredientText"
+        android:hint="Enter ingredient" />
+    <TextView
+        android:text="Quantity"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/amountText"
         android:hint="Enter new Amount" />
     <Button
         android:text="Apply"

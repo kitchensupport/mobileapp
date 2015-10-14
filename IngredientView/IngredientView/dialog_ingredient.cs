@@ -13,22 +13,32 @@ namespace IngredientView
 {
     public class OnUpdateEventArgs : EventArgs
     {
-        private string NewAmnt;
+        private string _NewAmount;
 
         public string NewAmount
         {
-            get { return NewAmnt; }
-            set { NewAmnt = value; }
+			get { return _NewAmount; }
+			set { _NewAmount = value; }
         }
-        public OnUpdateEventArgs(string newAmount) : base()
+
+		private string _NewName;
+		public string NewName {
+			get { return _NewName; }
+			set { _NewName = value; }
+		}
+
+		public OnUpdateEventArgs(string newName, string newAmount) : base()
         {
-            NewAmnt = newAmount;
+            _NewAmount = newAmount;
+			_NewName = newName;
         }
     }
     class dialog_ingredient : DialogFragment
     {
         private Button closeDialogBtn;
-        private EditText myEditText;
+        private EditText amountText;
+		private EditText ingredientText;
+
 
         public event EventHandler<OnUpdateEventArgs> myOnUpdateComplete;
         public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -36,7 +46,8 @@ namespace IngredientView
             base.OnCreateView(inflater, container, savedInstanceState);
             var view = inflater.Inflate(Resource.Layout.update_amount, container, false);
 
-            myEditText = view.FindViewById<EditText>(Resource.Id.editText1);
+			amountText = view.FindViewById<EditText>(Resource.Id.amountText);
+			ingredientText = view.FindViewById<EditText> (Resource.Id.ingredientText);
             closeDialogBtn = view.FindViewById<Button>(Resource.Id.button1);
 
 
@@ -47,7 +58,7 @@ namespace IngredientView
         void closeDialogBtn_Click(object sender, EventArgs e)
         {
             //User clicks the update button
-            myOnUpdateComplete.Invoke(this, new OnUpdateEventArgs(myEditText.Text));
+			myOnUpdateComplete.Invoke(this, new OnUpdateEventArgs(ingredientText.Text, amountText.Text));
             this.Dismiss();
 
         }
