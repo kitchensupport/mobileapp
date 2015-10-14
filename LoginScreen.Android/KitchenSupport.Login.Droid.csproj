@@ -64,6 +64,17 @@
     <AndroidResource Include="Resources\layout\Main.axml" />
     <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\drawable\cooking.png" />
+    <AndroidResource Include="Resources\drawable\dinner.png" />
+    <AndroidResource Include="Resources\drawable\dough.png" />
+    <AndroidResource Include="Resources\drawable\honey.png" />
+    <AndroidResource Include="Resources\drawable\pasta.png" />
+    <AndroidResource Include="Resources\drawable\pizza.png" />
+    <AndroidResource Include="Resources\drawable\salad.png" />
+    <AndroidResource Include="Resources\drawable\salmon.jpg" />
+    <AndroidResource Include="Resources\drawable\stirfry.jpg" />
+    <AndroidResource Include="Resources\drawable\utensils.png" />
+    <AndroidResource Include="Resources\drawable\veggies.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
