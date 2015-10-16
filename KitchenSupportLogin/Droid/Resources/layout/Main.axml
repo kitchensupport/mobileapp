@@ -3,25 +3,66 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/honey">
-    <EditText
-        android:inputType="textEmailAddress"
+    android:background="#f5f5f5">
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText1"
-        android:hint="email" />
-    <EditText
-        android:inputType="textPassword"
+        android:layout_height="80dp"
+        android:id="@+id/space3" />
+    <TextView
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:id="@+id/textView2"
+        android:background="#bb009688"
+        android:layout_gravity="center" />
+    <TextView
+        android:text="Welcome to"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:id="@+id/textView1"
+        android:textSize="40dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="#bb009688"
+        android:textColor="#ffffffff" />
+    <TextView
+        android:text="Kitchen.Support"
+        android:layout_width="350dp"
+        android:layout_height="70dp"
+        android:id="@+id/textView1"
+        android:textSize="40dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="#bb009688"
+        android:textColor="#ffffffff" />
+    <TextView
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:id="@+id/textView2"
+        android:background="#bb009688"
+        android:layout_gravity="center" />
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText2"
-        android:hint="password" />
+        android:layout_height="80dp"
+        android:id="@+id/space2"
+        android:background="f5f5f5" />
     <Button
-        android:id="@+id/loginButton"
-        android:layout_width="match_parent"
+        android:id="@+id/signInWithEmailButton"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="Log In"
-        android:background="#ff3db8f5" />
+        android:text="Sign In With Email"
+        android:background="#ff4caf50"
+        android:layout_gravity="center" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:id="@+id/space2" />
+    <Button
+        android:id="@+id/signInWithFacebookButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Sign In With Facebook"
+        android:background="#3b5998"
+        android:layout_gravity="center" />
     <Space
         android:layout_width="350.3dp"
         android:layout_height="480.3dp"
