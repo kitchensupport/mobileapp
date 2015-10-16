@@ -16,6 +16,8 @@
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>KitchenSupportLogin.Droid</AssemblyName>
     <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -78,6 +80,8 @@
     <AndroidResource Include="Resources\drawable-xxxhdpi\utensils.png" />
     <AndroidResource Include="Resources\drawable-xxxhdpi\veggies.png" />
     <AndroidResource Include="Resources\layout\LoginWithEmail.xml" />
+    <AndroidResource Include="Resources\layout\RegisterAccount.xml" />
+    <AndroidResource Include="Resources\layout\PasswordReset.xml" />
   </ItemGroup>
   <Import Project="..\KitchenSupportLogin\KitchenSupportLogin.projitems" Label="Shared" Condition="Exists('..\KitchenSupportLogin\KitchenSupportLogin.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
