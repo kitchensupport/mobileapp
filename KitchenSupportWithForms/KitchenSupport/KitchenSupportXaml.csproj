@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="settings.png" />
+    <None Include="profile.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LoginPage.xaml">
