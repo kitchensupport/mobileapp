@@ -35,14 +35,12 @@ namespace KitchenSupport
 		private void login(object sender, EventArgs args){
 			var client = new System.Net.Http.HttpClient ();
 			string url = "http://api.kitchen.support/accounts/login";
-			string data = "{\n    \"email\": \"" + email.Text + "\",\n    \"password\": \"" + password.Text + "\"\n}";
+			string data = "{\n    \"email\" : \"" + email.Text + "\",\n    \"password\" : \"" + password.Text + "\"\n}";
 			var httpContent = new StringContent (data);
-			client.BaseAddress = new Uri(url);
-			client.DefaultRequestHeaders.Accept.Clear();
-			client.DefaultRequestHeaders.Accept.Add (new MediaTypeWithQualityHeaderValue ("application/json"));
+			httpContent.Headers.ContentType = new MediaTypeHeaderValue ("application/json");
 			var response = client.PostAsync(new Uri(url), httpContent);
-			//var message = response.Result.Content.ReadAsStringAsync();
-			if (response.Result.StatusCode.ToString() == "Sucess") {
+
+			if (response.Result.StatusCode.ToString() == "OK") {
 				ContentPage HomePage = new ContentPage ();
 				Navigation.PushModalAsync (HomePage);
 			}
