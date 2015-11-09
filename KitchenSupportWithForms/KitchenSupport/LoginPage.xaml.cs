@@ -41,8 +41,7 @@ namespace KitchenSupport
 			var response = client.PostAsync(new Uri(url), httpContent);
 
 			if (response.Result.StatusCode.ToString() == "OK") {
-				ContentPage HomePage = new ContentPage ();
-				Navigation.PushModalAsync (HomePage);
+				Navigation.PushModalAsync (new HomePage());
 			}
 			else {
 				throw new Exception ("Bad response from server loggin in.");
@@ -50,12 +49,10 @@ namespace KitchenSupport
 		}
 
 		private void register(object sender, EventArgs args){
-			ContentPage RegisterPage = new ContentPage();
-			Navigation.PushModalAsync (RegisterPage);
+			Navigation.PushModalAsync (new RegisterPage());
 		}
 
 		private void forgotPassword(object sender, EventArgs args){
-			//ContentPage ResetPage = new ContentPage();
 			Navigation.PushModalAsync (new ResetPage());
 
 		}
