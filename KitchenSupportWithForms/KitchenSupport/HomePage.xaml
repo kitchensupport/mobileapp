@@ -3,9 +3,12 @@
 	<ContentPage.Content>
 		<StackLayout Spacing="20" Padding="50"
    		   	VerticalOptions="Center">
+   		   	<Button Text = "Back"
+				HorizontalOptions="LayoutOptions.Start"
+				Clicked="navigateBack"/>
    			<Label Text="My Home Page"
    				FontSize="36"
-   				XAlign="Center"/>
+   				HorizontalOptions="Center"/>
    			<Button Text="Find Recipes" TextColor="White"
    			   	BackgroundColor="#77D065"
    			   	Clicked="findRecipes"/>

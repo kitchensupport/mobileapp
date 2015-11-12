@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -30,6 +30,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="IngredientView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App.cs" />
     <Compile Include="LoginPage.xaml.cs">
@@ -40,9 +41,6 @@
     </Compile>
     <Compile Include="ResetPage.xaml.cs">
       <DependentUpon>ResetPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="IngredientsView.xaml.cs">
-      <DependentUpon>IngredientsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="SavedRecipesPage.xaml.cs">
       <DependentUpon>SavedRecipesPage.xaml</DependentUpon>
@@ -96,9 +94,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="ResetPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Include="IngredientsView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="SavedRecipesPage.xaml">
