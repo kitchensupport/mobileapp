@@ -44,7 +44,7 @@ namespace KitchenSupport
 				Navigation.PushModalAsync (new NavigationPage(new HomePage()));
 			}
 			else {
-				throw new Exception ("Bad response from server loggin in.");
+				DisplayAlert ("Alert", "Invalid Username or Password.","OK");
 			}
 		}
 
