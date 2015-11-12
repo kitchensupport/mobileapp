@@ -5,7 +5,8 @@ using System.Windows.Input;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
-
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace KitchenSupport
@@ -14,25 +15,10 @@ namespace KitchenSupport
 	{
 		public LoginPage ()
 		{
-			/*this.LoginCommand = new Command<string>((key) =>
-				{
-					login(email.Text,password.Text);
-				});*/
 			InitializeComponent ();
 		}
 
-		/*public void OnButtonClicked(object sender, EventArgs args)
-		{
-			count++;
-
-			((Button)sender).Text = 
-				String.Format("{0} click{1}!", count, count == 1 ? "" : "s");
-		}
-		*/
-	
-		//public ICommand LoginCommand { protected set; get; }
-
-		private void login(object sender, EventArgs args){
+		async private void login(object sender, EventArgs args){
 			var client = new System.Net.Http.HttpClient ();
 			string url = "http://api.kitchen.support/accounts/login";
 			string data = "{\n    \"email\" : \"" + email.Text + "\",\n    \"password\" : \"" + password.Text + "\"\n}";
@@ -41,11 +27,28 @@ namespace KitchenSupport
 			var response = client.PostAsync(new Uri(url), httpContent);
 
 			if (response.Result.StatusCode.ToString() == "OK") {
-				Navigation.PushModalAsync (new NavigationPage(new HomePage()));
+				var message = response.Result.Content.ReadAsStringAsync().Result;
+				var json = JObject.Parse (message);
+				var token = json ["api_token"];
+				await storeToken(token.ToString());
+				await Navigation.PushModalAsync (new NavigationPage(new HomePage()));
 			}
 			else {
-				DisplayAlert ("Alert", "Invalid Username or Password.","OK");
+				await DisplayAlert ("Alert", "Invalid Username or Password.","OK");
 			}
+		}
+
+		public async Task storeToken(string token)
+		{
+			//Writes a New Token upon authentication in the directory
+			DependencyService.Get<ISaveAndLoad>().SaveTextAsync("token.txt", token);
+			App.StoredToken = DependencyService.Get<ISaveAndLoad> ().LoadTextAsync ("token.txt").Result;
+		}
+
+		public interface ISaveAndLoad {
+			//Needed to pull and save tokens
+			Task SaveTextAsync (string filename, string text);
+			Task<string> LoadTextAsync (string filename);
 		}
 
 		private void register(object sender, EventArgs args){
