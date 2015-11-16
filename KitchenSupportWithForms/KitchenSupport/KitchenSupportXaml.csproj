@@ -30,6 +30,9 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ConformationPage.xaml.cs">
+      <DependentUpon>ConformationPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IngredientView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App.cs" />
@@ -39,6 +42,7 @@
     <Compile Include="HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecipeStream.cs" />
     <Compile Include="ResetPage.xaml.cs">
       <DependentUpon>ResetPage.xaml</DependentUpon>
     </Compile>
@@ -104,6 +108,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RegisterPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ConformationPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
