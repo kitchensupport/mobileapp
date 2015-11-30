@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+  		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  		x:Class="KitchenSupport.ConformationPage">
+  <ContentPage.Content>
+    <StackLayout Spacing="20" Padding="50"
+        VerticalOptions="Center">
+      <Label Text="Please enter the conformation code you received in email"
+        FontSize="28"
+        XAlign="Center"/>
+      <Entry Placeholder="Token"
+          x:Name="token"
+          Text="{Binding token}"/>
+      <Entry Placeholder="New password"
+          x:Name="newPassword"
+          Text="{Binding newPassword}"/>
+      <Button Text="Submit" TextColor="White"
+          BackgroundColor="#77D065"
+          Clicked="submitClicekd"/>
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>
