@@ -6,7 +6,9 @@ namespace KitchenSupport
 {
 	public class App : Application
 	{
-		public App ()
+        public static string StoredToken { get; internal set; }
+
+        public App ()
 		{
 			// The root page of your application
 			MainPage = new LoginPage();
