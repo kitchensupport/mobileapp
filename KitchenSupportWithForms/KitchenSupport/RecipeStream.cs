@@ -26,6 +26,7 @@ namespace KitchenSupport
             public string recipeName { get; set; }
             public string[] smallImageUrls { get; set; }
             public int id { get; set; }
+            public string yummly_id { get; set; }
             public int rating { get; set; }
             public string[] ingredients { get; set; }
 
@@ -40,6 +41,8 @@ namespace KitchenSupport
         {
             public RecipeDetails(recipe r)
             {
+                var tapImage = new TapGestureRecognizer();
+
                 string hourOrHours = "hours";
                 string ingredientsString = "";
                 for (int i = 0; i < r.ingredients.Length; i++)
@@ -72,6 +75,12 @@ namespace KitchenSupport
                 {
                     hourOrHours = "hour";
                 }
+                Button back = new Button
+                {
+                    Text = "Back",
+                    HorizontalOptions = LayoutOptions.Start,
+                    VerticalOptions = LayoutOptions.Start
+                };
                 Label header = new Label
                 {
                     Text = r.recipeName,
@@ -98,8 +107,29 @@ namespace KitchenSupport
                 {
                     Text = "Rating: " + r.rating.ToString() + "/5\n\nTime to make: " + String.Format("{0:0}", timeInhours) + ":" + sMinutes + " " + hourOrHours + "\n\nIngredients:\n" + ingredientsString
                 };
-                this.Content = new StackLayout
+                tapImage.Tapped += (sender, e) =>
                 {
+                    Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + r.yummly_id));
+                };
+                recipePic.GestureRecognizers.Add(tapImage);
+                var scroll = new ScrollView
+                {
+                    Content = new StackLayout
+                    {
+                        Spacing = 20,
+                        Padding = 50,
+                        VerticalOptions = LayoutOptions.Center,
+                        Children =
+                        {
+                            back,
+                            header,
+                            recipePic,
+                            details
+                        }
+                    },
+                };
+                this.Content = scroll;
+                /*{
                     Spacing = 20,
                     Padding = 50,
                     VerticalOptions = LayoutOptions.Center,
@@ -109,12 +139,17 @@ namespace KitchenSupport
                         recipePic,
                         details
                     }
+                };*/
+                back.Clicked += (sender, e) =>
+                {
+                    Navigation.PopModalAsync();
                 };
             }
         }
 
         public RecipeStream()
         {
+            var tapImage = new TapGestureRecognizer();
             int count = 1;
             var client = new HttpClient();
             string url = "http://api.kitchen.support/stream";
@@ -124,6 +159,11 @@ namespace KitchenSupport
             {
                 return;
             }
+            Button back = new Button
+            {
+                Text = "Back",
+                HorizontalOptions = LayoutOptions.Start
+            };
             var recipes = parseRecipes(response.Result);
             var recipePic = new Image
             {
@@ -182,17 +222,27 @@ namespace KitchenSupport
                 recipeName.Text = recipes[count].recipeName;
                 count++;
             };
+            back.Clicked += (sender, e) =>
+            {
+                Navigation.PopModalAsync();
+            };
             var browser = new WebView();
             openRecipe.Clicked += async (sender, e) =>
             {
                 await Navigation.PushModalAsync(new RecipeDetails(recipes[count-1]));
             };
+            tapImage.Tapped += (sender, e) =>
+            {
+                Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + recipes[count].yummly_id));
+            };
+            recipePic.GestureRecognizers.Add(tapImage);
             Content = new StackLayout
             {
                 Spacing = 20,
                 Padding = 50,
                 VerticalOptions = LayoutOptions.Center,
                 Children = {
+                    back,
                     header,
                     recipeName,
                     recipePic,
