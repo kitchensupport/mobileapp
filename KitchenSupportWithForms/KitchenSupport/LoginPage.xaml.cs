@@ -30,7 +30,7 @@ namespace KitchenSupport
 				var message = response.Result.Content.ReadAsStringAsync().Result;
 				var json = JObject.Parse (message);
 				var token = json ["api_token"];
-				await storeToken(token.ToString());
+				//await storeToken(token.ToString());
 				await Navigation.PushModalAsync (new NavigationPage(new HomePage()));
 			}
 			else {

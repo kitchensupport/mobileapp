@@ -1484,6 +1484,9 @@ namespace KitchenSupport.Droid
 			global::Xamarin.Forms.Platform.Resource.Styleable.ViewStubCompat_android_id = global::KitchenSupport.Droid.Resource.Styleable.ViewStubCompat_android_id;
 			global::Xamarin.Forms.Platform.Resource.Styleable.ViewStubCompat_android_inflatedId = global::KitchenSupport.Droid.Resource.Styleable.ViewStubCompat_android_inflatedId;
 			global::Xamarin.Forms.Platform.Resource.Styleable.ViewStubCompat_android_layout = global::KitchenSupport.Droid.Resource.Styleable.ViewStubCompat_android_layout;
+			global::ZXing.Mobile.Resource.Id.contentFrame = global::KitchenSupport.Droid.Resource.Id.contentFrame;
+			global::ZXing.Mobile.Resource.Layout.zxingscanneractivitylayout = global::KitchenSupport.Droid.Resource.Layout.zxingscanneractivitylayout;
+			global::ZXing.Mobile.Resource.Layout.zxingscannerfragmentlayout = global::KitchenSupport.Droid.Resource.Layout.zxingscannerfragmentlayout;
 		}
 		
 		public partial class Animation
@@ -3421,6 +3424,9 @@ namespace KitchenSupport.Droid
 			// aapt resource value: 0x7f0a0033
 			public const int collapseActionView = 2131361843;
 			
+			// aapt resource value: 0x7f0a0081
+			public const int contentFrame = 2131361921;
+			
 			// aapt resource value: 0x7f0a0046
 			public const int contentPanel = 2131361862;
 			
@@ -3899,6 +3905,12 @@ namespace KitchenSupport.Droid
 			
 			// aapt resource value: 0x7f03002f
 			public const int support_simple_spinner_dropdown_item = 2130903087;
+			
+			// aapt resource value: 0x7f030030
+			public const int zxingscanneractivitylayout = 2130903088;
+			
+			// aapt resource value: 0x7f030031
+			public const int zxingscannerfragmentlayout = 2130903089;
 			
 			static Layout()
 			{
