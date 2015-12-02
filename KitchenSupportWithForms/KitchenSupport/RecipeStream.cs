@@ -16,7 +16,7 @@ namespace KitchenSupport
 {
     public class RecipeStream : ContentPage
     {
-        
+
         public class Recipes
         {
             public List<recipe> recipes { get; set; }
@@ -28,7 +28,7 @@ namespace KitchenSupport
             public int id { get; set; }
             public int rating { get; set; }
             public string[] ingredients { get; set; }
-
+            public int? totalTimeInSeconds { get; set; }
         }
         public List<recipe> parseRecipes(string request)
         {
@@ -36,42 +36,27 @@ namespace KitchenSupport
             return result.recipes;
         }
 
+        public class Ingredient
+        {
+            public string name { get; set; }
+            public int quantity { get; set; }
+            public string unit { get; set; }
+
+            public string unitAndQuantity
+            {
+                get
+                {
+                    return quantity + " " + unit;
+                }
+            }
+        }
+
         public class RecipeDetails : ContentPage
         {
+            public static ListView listview;
+            public static List<Ingredient> ingredients;
             public RecipeDetails(recipe r)
             {
-                string hourOrHours = "hours";
-                string ingredientsString = "";
-                for (int i = 0; i < r.ingredients.Length; i++)
-                {
-                    ingredientsString += r.ingredients[i] + "\n";
-                }
-                int time = 0;
-                if (r != null)
-                {
-                    time = 3600;
-                }
-                else
-                {
-                    return;
-                }
-                
-                double timeInhours = (double)(time) / 3600;
-                double minutes = 0;
-                if (timeInhours > 1)
-                {
-                    minutes = timeInhours - 1;
-                    minutes *= 60;
-                }
-                if (timeInhours < 1)
-                {
-                    minutes = 60*timeInhours;
-                    timeInhours = 0;
-                }
-                if (timeInhours == 1 && minutes == 0)
-                {
-                    hourOrHours = "hour";
-                }
                 Label header = new Label
                 {
                     Text = r.recipeName,
@@ -84,20 +69,102 @@ namespace KitchenSupport
                     HeightRequest = 200,
                     WidthRequest = 200
                 };
-                string sMinutes = "";
-                if (minutes < 10)
+
+                recipePic.Source = ImageSource.FromUri(new Uri(r.smallImageUrls[0].Substring(0, r.smallImageUrls[0].Length - 4)));
+
+
+                /*String ratingImageName = r.rating.ToString() + "star.png";
+                var ratingImage = new Image { Aspect = Aspect.AspectFit };
+                ratingImage.Source = ImageSource.FromFile(ratingImageName);*/
+
+                string[] ratingImageLinks = new string[] { "http://i.imgur.com/7qq8zdR.png", "http://i.imgur.com/BRwowMP.png", "http://i.imgur.com/dNUdKiO.png", "http://i.imgur.com/zK4JmCG.png", "http://i.imgur.com/61WSiZf.png", "http://i.imgur.com/7J7BYuv.png" };
+                var ratingImage = new Image { Aspect = Aspect.AspectFit };
+                ratingImage.Source = ImageSource.FromUri(new Uri(ratingImageLinks[r.rating]));
+
+
+                string hourOrHours = "hours";
+                string minuteOrMinutes = "minutes";
+
+                int time = 0;
+                if (r == null)
                 {
-                    sMinutes = "0" + minutes.ToString();
+                    return;
+
+                }
+
+                Label cookingTimeLabel = new Label();
+
+                if (r.totalTimeInSeconds == null)
+                {
+                    cookingTimeLabel.Text = "";
+                    cookingTimeLabel.Font = Font.BoldSystemFontOfSize(1);
                 }
                 else
                 {
-                    sMinutes = minutes.ToString();
+                    time = (int) r.totalTimeInSeconds;
+
+                    int hours = (int)(time / 3600);
+                    int leftOverSeconds = time - (hours * 3600);
+                    int minutes = (int)(leftOverSeconds / 60);
+
+
+                    if (hours == 1)
+                    {
+                        hourOrHours = "hour";
+                    }
+
+                    if (minutes == 1)
+                    {
+                        minuteOrMinutes = "minute";
+                    }
+
+                    String cookingTime = "";
+
+                    if (hours != 0)
+                    {
+                        cookingTime += hours.ToString() + " " + hourOrHours;
+                    }
+
+                    if (minutes != 0)
+                    {
+                        if (hours != 0)
+                            cookingTime += ", ";
+
+                        cookingTime += minutes.ToString() + " " + minuteOrMinutes;
+                    }
+
+                    cookingTimeLabel.Text = "Time to make: " + cookingTime;
+                    cookingTimeLabel.Font = Font.BoldSystemFontOfSize(25);
                 }
-                recipePic.Source = ImageSource.FromUri(new Uri(r.smallImageUrls[0].Substring(0, r.smallImageUrls[0].Length - 4)));
-                Label details = new Label
+
+                Label ingredientLabel = new Label
                 {
-                    Text = "Rating: " + r.rating.ToString() + "/5\n\nTime to make: " + String.Format("{0:0}", timeInhours) + ":" + sMinutes + " " + hourOrHours + "\n\nIngredients:\n" + ingredientsString
+                    Text = "Ingredients:",
+                    Font = Font.BoldSystemFontOfSize(25)
                 };
+
+                listview = new ListView();
+                listview.RowHeight = 40;
+
+                ingredients = new List<Ingredient>();
+                for (int i = 0; i < r.ingredients.Length; i++)
+                {
+                    ingredients.Add(new Ingredient { name = r.ingredients[i], quantity = 0, unit = " " });
+                }
+                listview.ItemsSource = ingredients;
+
+                listview.ItemTemplate = new DataTemplate(typeof(TextCell));
+                listview.ItemTemplate.SetBinding(TextCell.TextProperty, ".name");
+                //listview.ItemTemplate.SetBinding(TextCell.DetailProperty, ".unitAndQuantity");
+
+                Button viewRecipeButton = new Button();
+                viewRecipeButton.Text = "View Recipe";
+                viewRecipeButton.BackgroundColor = Color.FromHex("77D065");
+
+                viewRecipeButton.Clicked += delegate {
+                    Device.OpenUri(new Uri("http://bfy.tw/333q"));
+                };
+
                 this.Content = new StackLayout
                 {
                     Spacing = 20,
@@ -107,7 +174,11 @@ namespace KitchenSupport
                     {
                         header,
                         recipePic,
-                        details
+                        ratingImage,
+                        cookingTimeLabel,
+                        ingredientLabel,
+                        listview,
+                        viewRecipeButton
                     }
                 };
             }
@@ -119,7 +190,7 @@ namespace KitchenSupport
             var client = new HttpClient();
             string url = "http://api.kitchen.support/stream";
             var response = client.GetStringAsync(new Uri(url));
-            
+
             if (response == null)
             {
                 return;
@@ -139,7 +210,7 @@ namespace KitchenSupport
                 Font = Font.BoldSystemFontOfSize(30),
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Start
-               
+
             };
             Label recipeName = new Label
             {
@@ -168,7 +239,7 @@ namespace KitchenSupport
                 {
                     count = 0;
                 }
-                recipePic.Source = ImageSource.FromUri(new Uri(recipes[count].smallImageUrls[0].Substring(0,recipes[count].smallImageUrls[0].Length - 4)));
+                recipePic.Source = ImageSource.FromUri(new Uri(recipes[count].smallImageUrls[0].Substring(0, recipes[count].smallImageUrls[0].Length - 4)));
                 recipeName.Text = recipes[count].recipeName;
                 count++;
             };
@@ -185,7 +256,7 @@ namespace KitchenSupport
             var browser = new WebView();
             openRecipe.Clicked += async (sender, e) =>
             {
-                await Navigation.PushModalAsync(new RecipeDetails(recipes[count-1]));
+                await Navigation.PushModalAsync(new RecipeDetails(recipes[count - 1]));
             };
             Content = new StackLayout
             {
