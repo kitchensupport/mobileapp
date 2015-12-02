@@ -41,6 +41,9 @@ namespace KitchenSupport
 			var response = client.PostAsync(new Uri(url), httpContent);
 
 			if (response.Result.StatusCode.ToString() == "OK") {
+				// TODO: get user_token and store
+				// DependencyService.Get<localDataInterface>().saveUserToken(user_token);
+				// read: DependencyService.Get<localDataInterface>().loadUserToken(user_token);
 				Navigation.PushModalAsync (new HomePage());
 			}
 			else {
