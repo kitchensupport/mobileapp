@@ -41,19 +41,7 @@ namespace KitchenSupport
             }
         }
 
-        public async Task storeToken(string token)
-        {
-            //Writes a New Token upon authentication in the directory
-            DependencyService.Get<ISaveAndLoad>().SaveTextAsync("token.txt", token);
-            App.StoredToken = DependencyService.Get<ISaveAndLoad>().LoadTextAsync("token.txt").Result;
-        }
 
-        public interface ISaveAndLoad
-        {
-            //Needed to pull and save tokens
-            Task SaveTextAsync(string filename, string text);
-            Task<string> LoadTextAsync(string filename);
-        }
 
         private void register(object sender, EventArgs args)
         {
