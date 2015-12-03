@@ -12,7 +12,7 @@ using Xamarin.Forms.Platform.Android;
 
 namespace KitchenSupport.Droid
 {
-	[Activity(Label = "LoginPage", MainLauncher = true, 
+	[Activity(Label = "Kitchen.Support", MainLauncher = true, Icon = "@drawable/icon",
 		ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
 	public class MainActivity : FormsApplicationActivity
 	{
