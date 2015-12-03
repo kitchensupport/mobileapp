@@ -29,6 +29,7 @@ namespace KitchenSupport
             public string yummly_id { get; set; }
             public int rating { get; set; }
             public string[] ingredients { get; set; }
+            public int? totalTimeInSeconds { get; set; }
 
         }
         public List<recipe> parseRecipes(string request)
@@ -37,44 +38,104 @@ namespace KitchenSupport
             return result.recipes;
         }
 
+        public class Ingredient
+        {
+            public string name { get; set; }
+            public int quantity { get; set; }
+            public string unit { get; set; }
+
+            public string unitAndQuantity
+            {
+                get
+                {
+                    return quantity + " " + unit;
+                }
+            }
+        }
+
         public class RecipeDetails : ContentPage
         {
             public RecipeDetails(recipe r)
             {
                 var tapImage = new TapGestureRecognizer();
 
+                string[] ratingImageLinks = new string[] { "http://i.imgur.com/7qq8zdR.png", "http://i.imgur.com/BRwowMP.png", "http://i.imgur.com/dNUdKiO.png", "http://i.imgur.com/zK4JmCG.png", "http://i.imgur.com/61WSiZf.png", "http://i.imgur.com/7J7BYuv.png" };
+                var ratingImage = new Image { Aspect = Aspect.AspectFit };
+                ratingImage.Source = ImageSource.FromUri(new Uri(ratingImageLinks[r.rating]));
+
+
                 string hourOrHours = "hours";
-                string ingredientsString = "";
-                for (int i = 0; i < r.ingredients.Length; i++)
-                {
-                    ingredientsString += r.ingredients[i] + "\n";
-                }
+                string minuteOrMinutes = "minutes";
+
                 int time = 0;
-                if (r != null)
-                {
-                    time = 3600;
-                }
-                else
+                if (r == null)
                 {
                     return;
                 }
+
+                Label cookingTimeLabel = new Label();
                 
-                double timeInhours = (double)(time) / 3600;
-                double minutes = 0;
-                if (timeInhours > 1)
+                if (r.totalTimeInSeconds == null)
                 {
-                    minutes = timeInhours - 1;
-                    minutes *= 60;
+                    cookingTimeLabel.Text = "";
+                    cookingTimeLabel.Font = Font.BoldSystemFontOfSize(1);
                 }
-                if (timeInhours < 1)
+                else
                 {
-                    minutes = 60*timeInhours;
-                    timeInhours = 0;
+                    time = (int)r.totalTimeInSeconds;
+
+                    int hours = (int)(time / 3600);
+                    int leftOverSeconds = time - (hours * 3600);
+                    int minutes = (int)(leftOverSeconds / 60);
+
+
+                    if (hours == 1)
+                    {
+                        hourOrHours = "hour";
+                    }
+
+                    if (minutes == 1)
+                    {
+                        minuteOrMinutes = "minute";
+                    }
+
+                    String cookingTime = "";
+
+                    if (hours != 0)
+                    {
+                        cookingTime += hours.ToString() + " " + hourOrHours;
+                    }
+
+                    if (minutes != 0)
+                    {
+                        if (hours != 0)
+                            cookingTime += ", ";
+
+                        cookingTime += minutes.ToString() + " " + minuteOrMinutes;
+                    }
+
+                    cookingTimeLabel.Text = "Time to make: " + cookingTime;
+                    cookingTimeLabel.Font = Font.BoldSystemFontOfSize(25);
                 }
-                if (timeInhours == 1 && minutes == 0)
+
+                Label ingredientLabel = new Label
                 {
-                    hourOrHours = "hour";
+                    Text = "Ingredients:",
+                    Font = Font.BoldSystemFontOfSize(25)
+                };
+                ListView listview = new ListView();
+                listview.RowHeight = 40;
+
+                List<Ingredient> ingredients = new List<Ingredient>();
+                for (int i = 0; i < r.ingredients.Length; i++)
+                {
+                    ingredients.Add(new Ingredient { name = r.ingredients[i], quantity = 0, unit = " " });
                 }
+                listview.ItemsSource = ingredients;
+
+                listview.ItemTemplate = new DataTemplate(typeof(TextCell));
+                listview.ItemTemplate.SetBinding(TextCell.TextProperty, ".name");
+
                 Button back = new Button
                 {
                     Text = "Back",
@@ -93,20 +154,7 @@ namespace KitchenSupport
                     HeightRequest = 200,
                     WidthRequest = 200
                 };
-                string sMinutes = "";
-                if (minutes < 10)
-                {
-                    sMinutes = "0" + minutes.ToString();
-                }
-                else
-                {
-                    sMinutes = minutes.ToString();
-                }
                 recipePic.Source = ImageSource.FromUri(new Uri(r.smallImageUrls[0].Substring(0, r.smallImageUrls[0].Length - 4)));
-                Label details = new Label
-                {
-                    Text = "Rating: " + r.rating.ToString() + "/5\n\nTime to make: " + String.Format("{0:0}", timeInhours) + ":" + sMinutes + " " + hourOrHours + "\n\nIngredients:\n" + ingredientsString
-                };
                 tapImage.Tapped += (sender, e) =>
                 {
                     Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + r.yummly_id));
@@ -124,22 +172,14 @@ namespace KitchenSupport
                             back,
                             header,
                             recipePic,
-                            details
+                            ratingImage,
+                            cookingTimeLabel,
+                            listview
+
                         }
                     },
                 };
                 this.Content = scroll;
-                /*{
-                    Spacing = 20,
-                    Padding = 50,
-                    VerticalOptions = LayoutOptions.Center,
-                    Children =
-                    {
-                        header,
-                        recipePic,
-                        details
-                    }
-                };*/
                 back.Clicked += (sender, e) =>
                 {
                     Navigation.PopModalAsync();
@@ -206,6 +246,12 @@ namespace KitchenSupport
             {
                 if (count == 30)
                 {
+                    response = client.GetStringAsync(new Uri(url));
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    recipes = parseRecipes(response.Result);
                     count = 0;
                 }
                 recipePic.Source = ImageSource.FromUri(new Uri(recipes[count].smallImageUrls[0].Substring(0,recipes[count].smallImageUrls[0].Length - 4)));
@@ -216,6 +262,12 @@ namespace KitchenSupport
             {
                 if (count == 30)
                 {
+                    response = client.GetStringAsync(new Uri(url));
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    recipes = parseRecipes(response.Result);
                     count = 0;
                 }
                 recipePic.Source = ImageSource.FromUri(new Uri(recipes[count].smallImageUrls[0].Substring(0, recipes[count].smallImageUrls[0].Length - 4)));
