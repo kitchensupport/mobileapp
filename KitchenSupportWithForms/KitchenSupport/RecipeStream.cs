@@ -16,7 +16,7 @@ namespace KitchenSupport
 {
     public class RecipeStream : ContentPage
     {
-
+        
         public class Recipes
         {
             public List<recipe> recipes { get; set; }
@@ -26,9 +26,11 @@ namespace KitchenSupport
             public string recipeName { get; set; }
             public string[] smallImageUrls { get; set; }
             public int id { get; set; }
+            public string yummly_id { get; set; }
             public int rating { get; set; }
             public string[] ingredients { get; set; }
             public int? totalTimeInSeconds { get; set; }
+
         }
         public List<recipe> parseRecipes(string request)
         {
@@ -53,29 +55,9 @@ namespace KitchenSupport
 
         public class RecipeDetails : ContentPage
         {
-            public static ListView listview;
-            public static List<Ingredient> ingredients;
             public RecipeDetails(recipe r)
             {
-                Label header = new Label
-                {
-                    Text = r.recipeName,
-                    Font = Font.BoldSystemFontOfSize(40),
-                    HorizontalOptions = LayoutOptions.Center
-                };
-                var recipePic = new Image
-                {
-                    Aspect = Aspect.AspectFill,
-                    HeightRequest = 200,
-                    WidthRequest = 200
-                };
-
-                recipePic.Source = ImageSource.FromUri(new Uri(r.smallImageUrls[0].Substring(0, r.smallImageUrls[0].Length - 4)));
-
-
-                /*String ratingImageName = r.rating.ToString() + "star.png";
-                var ratingImage = new Image { Aspect = Aspect.AspectFit };
-                ratingImage.Source = ImageSource.FromFile(ratingImageName);*/
+                var tapImage = new TapGestureRecognizer();
 
                 string[] ratingImageLinks = new string[] { "http://i.imgur.com/7qq8zdR.png", "http://i.imgur.com/BRwowMP.png", "http://i.imgur.com/dNUdKiO.png", "http://i.imgur.com/zK4JmCG.png", "http://i.imgur.com/61WSiZf.png", "http://i.imgur.com/7J7BYuv.png" };
                 var ratingImage = new Image { Aspect = Aspect.AspectFit };
@@ -89,11 +71,10 @@ namespace KitchenSupport
                 if (r == null)
                 {
                     return;
-
                 }
 
                 Label cookingTimeLabel = new Label();
-
+                
                 if (r.totalTimeInSeconds == null)
                 {
                     cookingTimeLabel.Text = "";
@@ -101,7 +82,7 @@ namespace KitchenSupport
                 }
                 else
                 {
-                    time = (int) r.totalTimeInSeconds;
+                    time = (int)r.totalTimeInSeconds;
 
                     int hours = (int)(time / 3600);
                     int leftOverSeconds = time - (hours * 3600);
@@ -142,11 +123,10 @@ namespace KitchenSupport
                     Text = "Ingredients:",
                     Font = Font.BoldSystemFontOfSize(25)
                 };
-
-                listview = new ListView();
+                ListView listview = new ListView();
                 listview.RowHeight = 40;
 
-                ingredients = new List<Ingredient>();
+                List<Ingredient> ingredients = new List<Ingredient>();
                 for (int i = 0; i < r.ingredients.Length; i++)
                 {
                     ingredients.Add(new Ingredient { name = r.ingredients[i], quantity = 0, unit = " " });
@@ -155,46 +135,75 @@ namespace KitchenSupport
 
                 listview.ItemTemplate = new DataTemplate(typeof(TextCell));
                 listview.ItemTemplate.SetBinding(TextCell.TextProperty, ".name");
-                //listview.ItemTemplate.SetBinding(TextCell.DetailProperty, ".unitAndQuantity");
 
-                Button viewRecipeButton = new Button();
-                viewRecipeButton.Text = "View Recipe";
-                viewRecipeButton.BackgroundColor = Color.FromHex("77D065");
-
-                viewRecipeButton.Clicked += delegate {
-                    Device.OpenUri(new Uri("http://bfy.tw/333q"));
-                };
-
-                this.Content = new StackLayout
+                Button back = new Button
                 {
-                    Spacing = 20,
-                    Padding = 50,
-                    VerticalOptions = LayoutOptions.Center,
-                    Children =
+                    Text = "Back",
+                    HorizontalOptions = LayoutOptions.Start,
+                    VerticalOptions = LayoutOptions.Start
+                };
+                Label header = new Label
+                {
+                    Text = r.recipeName,
+                    Font = Font.BoldSystemFontOfSize(40),
+                    HorizontalOptions = LayoutOptions.Center
+                };
+                var recipePic = new Image
+                {
+                    Aspect = Aspect.AspectFill,
+                    HeightRequest = 200,
+                    WidthRequest = 200
+                };
+                recipePic.Source = ImageSource.FromUri(new Uri(r.smallImageUrls[0].Substring(0, r.smallImageUrls[0].Length - 4)));
+                tapImage.Tapped += (sender, e) =>
+                {
+                    Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + r.yummly_id));
+                };
+                recipePic.GestureRecognizers.Add(tapImage);
+                var scroll = new ScrollView
+                {
+                    Content = new StackLayout
                     {
-                        header,
-                        recipePic,
-                        ratingImage,
-                        cookingTimeLabel,
-                        ingredientLabel,
-                        listview,
-                        viewRecipeButton
-                    }
+                        Spacing = 20,
+                        Padding = 50,
+                        VerticalOptions = LayoutOptions.Center,
+                        Children =
+                        {
+                            back,
+                            header,
+                            recipePic,
+                            ratingImage,
+                            cookingTimeLabel,
+                            listview
+
+                        }
+                    },
+                };
+                this.Content = scroll;
+                back.Clicked += (sender, e) =>
+                {
+                    Navigation.PopModalAsync();
                 };
             }
         }
 
         public RecipeStream()
         {
+            var tapImage = new TapGestureRecognizer();
             int count = 1;
             var client = new HttpClient();
             string url = "http://api.kitchen.support/stream";
             var response = client.GetStringAsync(new Uri(url));
-
+            
             if (response == null)
             {
                 return;
             }
+            Button back = new Button
+            {
+                Text = "Back",
+                HorizontalOptions = LayoutOptions.Start
+            };
             var recipes = parseRecipes(response.Result);
             var recipePic = new Image
             {
@@ -210,7 +219,7 @@ namespace KitchenSupport
                 Font = Font.BoldSystemFontOfSize(30),
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Start
-
+               
             };
             Label recipeName = new Label
             {
@@ -237,9 +246,15 @@ namespace KitchenSupport
             {
                 if (count == 30)
                 {
+                    response = client.GetStringAsync(new Uri(url));
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    recipes = parseRecipes(response.Result);
                     count = 0;
                 }
-                recipePic.Source = ImageSource.FromUri(new Uri(recipes[count].smallImageUrls[0].Substring(0, recipes[count].smallImageUrls[0].Length - 4)));
+                recipePic.Source = ImageSource.FromUri(new Uri(recipes[count].smallImageUrls[0].Substring(0,recipes[count].smallImageUrls[0].Length - 4)));
                 recipeName.Text = recipes[count].recipeName;
                 count++;
             };
@@ -247,23 +262,39 @@ namespace KitchenSupport
             {
                 if (count == 30)
                 {
+                    response = client.GetStringAsync(new Uri(url));
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    recipes = parseRecipes(response.Result);
                     count = 0;
                 }
                 recipePic.Source = ImageSource.FromUri(new Uri(recipes[count].smallImageUrls[0].Substring(0, recipes[count].smallImageUrls[0].Length - 4)));
                 recipeName.Text = recipes[count].recipeName;
                 count++;
             };
+            back.Clicked += (sender, e) =>
+            {
+                Navigation.PopModalAsync();
+            };
             var browser = new WebView();
             openRecipe.Clicked += async (sender, e) =>
             {
-                await Navigation.PushModalAsync(new RecipeDetails(recipes[count - 1]));
+                await Navigation.PushModalAsync(new RecipeDetails(recipes[count-1]));
             };
+            tapImage.Tapped += (sender, e) =>
+            {
+                Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + recipes[count].yummly_id));
+            };
+            recipePic.GestureRecognizers.Add(tapImage);
             Content = new StackLayout
             {
                 Spacing = 20,
                 Padding = 50,
                 VerticalOptions = LayoutOptions.Center,
                 Children = {
+                    back,
                     header,
                     recipeName,
                     recipePic,
