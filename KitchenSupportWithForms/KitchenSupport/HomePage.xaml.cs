@@ -31,5 +31,10 @@ namespace KitchenSupport
             //Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
             Navigation.PopModalAsync();
         }
+        private void logOut(object sender, EventArgs args)
+        {
+            DependencyService.Get<localDataInterface>().save("token", "");
+            Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+        }
     }
 }

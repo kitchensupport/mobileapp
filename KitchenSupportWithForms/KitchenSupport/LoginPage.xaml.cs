@@ -15,13 +15,43 @@ namespace KitchenSupport
     {
         public LoginPage()
         {
-            InitializeComponent();
+            string accountUrl = "http://api.kitchen.support/account?api_token=";
+            accountUrl += DependencyService.Get<localDataInterface>().load("token");
+            //accountUrl += "yolo";
+            var client = new HttpClient();
+            var accountResponseTest = client.GetAsync(new Uri(accountUrl));
+            if (accountResponseTest.Result.StatusCode.ToString() != "OK")
+            {
+                InitializeComponent();
+            }
+            else
+            {
+                var accountResponse = client.GetStringAsync(new Uri(accountUrl));
+                var status = parseAccountResponse(accountResponse.Result);
+                Navigation.PushModalAsync(new NavigationPage(new HomePage()));
+            }
+            
+            
+            
+        }
+    
+
+        public class AccountResponse
+        {
+            public string status { get; set; }
         }
 
+        public string parseAccountResponse(string request)
+        {
+            var result = JsonConvert.DeserializeObject<AccountResponse>(request);
+            return result.status;
+        }
         async private void login(object sender, EventArgs args)
         {
-            var client = new System.Net.Http.HttpClient();
+            var client = new HttpClient();
+
             string url = "http://api.kitchen.support/accounts/login";
+           
             string data = "{\n    \"email\" : \"" + email.Text + "\",\n    \"password\" : \"" + password.Text + "\"\n}";
             var httpContent = new StringContent(data);
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -33,7 +63,8 @@ namespace KitchenSupport
                 var json = JObject.Parse(message);
                 var token = json["api_token"];
                 //await storeToken(token.ToString());
-                DependencyService.Get<localDataInterface> ().save ("token", token.ToString());
+                DependencyService.Get<localDataInterface>().save("token", token.ToString());
+
                 // read: DependencyService.Get<localDataInterface> ().load();
                 await Navigation.PushModalAsync(new NavigationPage(new HomePage()));
             }
@@ -41,6 +72,8 @@ namespace KitchenSupport
             {
                 await DisplayAlert("Alert", "Invalid Username or Password.", "OK");
             }
+            
+            
         }
 
 

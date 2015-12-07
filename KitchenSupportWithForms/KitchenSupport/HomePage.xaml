@@ -18,6 +18,9 @@
       <Button Text="My Ingredients" TextColor="White"
           BackgroundColor="#77D065"
           Clicked="navigateToIngredientsView"/>
+      <Button Text="Log Out" TextColor="White"
+          BackgroundColor="#77D065"
+          Clicked="logOut"/>
     </StackLayout>
   </ContentPage.Content>
 </ContentPage>
