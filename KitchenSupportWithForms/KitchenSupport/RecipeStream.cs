@@ -41,16 +41,6 @@ namespace KitchenSupport
         public class Ingredient
         {
             public string name { get; set; }
-            public int quantity { get; set; }
-            public string unit { get; set; }
-
-            public string unitAndQuantity
-            {
-                get
-                {
-                    return quantity + " " + unit;
-                }
-            }
         }
 
         public class RecipeDetails : ContentPage
@@ -129,7 +119,7 @@ namespace KitchenSupport
                 List<Ingredient> ingredients = new List<Ingredient>();
                 for (int i = 0; i < r.ingredients.Length; i++)
                 {
-                    ingredients.Add(new Ingredient { name = r.ingredients[i], quantity = 0, unit = " " });
+                    ingredients.Add(new Ingredient { name = r.ingredients[i]});
                 }
                 listview.ItemsSource = ingredients;
 

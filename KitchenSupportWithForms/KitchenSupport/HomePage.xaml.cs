@@ -23,7 +23,7 @@ namespace KitchenSupport
 
         private void navigateToIngredientsView(object sender, EventArgs args)
         {
-            Navigation.PushModalAsync(new NavigationPage(new Ingredients()));
+            Navigation.PushModalAsync(new NavigationPage(new IngredientView()));
         }
 
         private void navigateBack(object sender, EventArgs args)

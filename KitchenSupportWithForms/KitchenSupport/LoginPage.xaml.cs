@@ -33,7 +33,7 @@ namespace KitchenSupport
                 var json = JObject.Parse(message);
                 var token = json["api_token"];
                 //await storeToken(token.ToString());
-                DependencyService.Get<localDataInterface> ().save ("key", token.ToString());
+                DependencyService.Get<localDataInterface> ().save ("token", token.ToString());
                 // read: DependencyService.Get<localDataInterface> ().load();
                 await Navigation.PushModalAsync(new NavigationPage(new HomePage()));
             }
