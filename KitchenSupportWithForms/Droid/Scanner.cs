@@ -18,7 +18,10 @@ namespace KitchenSupport.Droid
 
             //if (result != null)
             //Console.WriteLine("Scanned Barcode: " + result.Text);
-
+            if (result == null)
+            {
+                return "null";
+            }
             return result.Text;
         }
 

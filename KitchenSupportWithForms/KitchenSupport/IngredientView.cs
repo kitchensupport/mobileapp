@@ -21,7 +21,7 @@ namespace KitchenSupport
         public static List<ingredient> ingredients;
         public Ingredients()
         {
-
+            
             Label header = new Label
             {
                 Text = "Your Ingredients",
@@ -165,48 +165,54 @@ namespace KitchenSupport
                 button2.Clicked += async (sender, e) =>
                 {
                     var data1 = await DependencyService.Get<IScanner>().Scan();
-
-                    var client = new System.Net.Http.HttpClient();
-                    string url = "http://api.walmartlabs.com/v1/items?apiKey=h5yjnkgcrmtzn3rjaduapusv&upc=" + data1;
-                    var response = client.GetAsync(new Uri(url));
-                    if (response.Result.StatusCode.ToString() == "OK")
+                    if (data1 == "null")
                     {
-                        var message = response.Result.Content.ReadAsStringAsync().Result;
-                        //var result = JsonConvert.DeserializeObject<Items>(message);
-                        //List<Item> information = result.data;
-                        //var item = information.ToList().First();
-                        //var name = item.name;
-                        string word = "";
-                        string name = "";
-                        for (int location = 0; location < message.Length - 4; location++)
-                        {
-                            word = (message.Substring(location, 4));
-                            if (word == "name")
-                            {
-                                int j = location + 7;
-                                char c = message[j];
-                                while (c != '"')
-                                {
-                                    name += message[j];
-                                    j++;
-                                    c = message[j];
-                                }
-                                break;
-                            }
-                        }
-                        await DisplayAlert("Item Found", name, "OK");
-                        //var json = JObject.Parse (message);
-                        //var token = json ["name"];
-                        //await DisplayAlert ("Scanner", token.ToString(), "OK");
-                        //await storeToken(token.ToString());
-                        e1.Text = name;
-                        //await Navigation.PushModalAsync (new NavigationPage(new HomePage()));
+                        await Navigation.PopModalAsync();
                     }
                     else
                     {
-                        await DisplayAlert("Alert", "Could not find item from UPC code.", "OK");
-                        await DisplayAlert("Scanner", data1, "OK");
-                        await DisplayAlert("Response", response.Result.StatusCode.ToString(), "OK");
+                        var client = new System.Net.Http.HttpClient();
+                        string url = "http://api.walmartlabs.com/v1/items?apiKey=h5yjnkgcrmtzn3rjaduapusv&upc=" + data1;
+                        var response = client.GetAsync(new Uri(url));
+                        if (response.Result.StatusCode.ToString() == "OK")
+                        {
+                            var message = response.Result.Content.ReadAsStringAsync().Result;
+                            //var result = JsonConvert.DeserializeObject<Items>(message);
+                            //List<Item> information = result.data;
+                            //var item = information.ToList().First();
+                            //var name = item.name;
+                            string word = "";
+                            string name = "";
+                            for (int location = 0; location < message.Length - 4; location++)
+                            {
+                                word = (message.Substring(location, 4));
+                                if (word == "name")
+                                {
+                                    int j = location + 7;
+                                    char c = message[j];
+                                    while (c != '"')
+                                    {
+                                        name += message[j];
+                                        j++;
+                                        c = message[j];
+                                    }
+                                    break;
+                                }
+                            }
+                            await DisplayAlert("Item Found", name, "OK");
+                            //var json = JObject.Parse (message);
+                            //var token = json ["name"];
+                            //await DisplayAlert ("Scanner", token.ToString(), "OK");
+                            //await storeToken(token.ToString());
+                            e1.Text = name;
+                            //await Navigation.PushModalAsync (new NavigationPage(new HomePage()));
+                        }
+                        else
+                        {
+                            await DisplayAlert("Alert", "Could not find item from UPC code.", "OK");
+                            await DisplayAlert("Scanner", data1, "OK");
+                            await DisplayAlert("Response", response.Result.StatusCode.ToString(), "OK");
+                        }
                     }
 
                 };
