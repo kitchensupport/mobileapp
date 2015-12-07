@@ -18,7 +18,7 @@ namespace KitchenSupport
 
         private void viewSavedRecipes(object sender, EventArgs args)
         {
-            Navigation.PushModalAsync(new NavigationPage(new SavedRecipesPage()));
+            Navigation.PushModalAsync(new SavedRecipesPage());
         }
 
         private void navigateToIngredientsView(object sender, EventArgs args)
