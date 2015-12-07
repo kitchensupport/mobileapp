@@ -30,6 +30,7 @@ namespace KitchenSupport
             public int rating { get; set; }
             public string[] ingredients { get; set; }
             public int? totalTimeInSeconds { get; set; }
+            public int? likes { get; set; }
 
         }
         public List<recipe> parseRecipes(string request)
@@ -150,6 +151,43 @@ namespace KitchenSupport
                     Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + r.yummly_id));
                 };
                 recipePic.GestureRecognizers.Add(tapImage);
+                
+
+                Button viewRecipeButton = new Button();
+                viewRecipeButton.Text = "View Recipe";
+                viewRecipeButton.BackgroundColor = Color.FromHex("77D065");
+
+                viewRecipeButton.Clicked += delegate {
+                    Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + r.yummly_id));
+                };
+
+                int likes = (int) r.likes;
+                string likeStatement = "";
+
+                if (likes == 0 || r.likes == null)
+                {
+                    likeStatement = "Be the first to like this recipe!";
+                }
+                else
+                {
+                    likeStatement = "Join the ";
+                    if (likes == 1)
+                    {
+                        likeStatement += "1 person who has liked this recipe!";
+                    }
+                    else
+                    {
+                        likeStatement += likes.ToString() + " people who have liked this recipe!";
+                    }
+                }
+
+                Label likesLabel = new Label
+                {
+                    Text = likeStatement,
+                    Font = Font.BoldSystemFontOfSize(17),
+                    HorizontalOptions = LayoutOptions.Center
+                };
+
                 var scroll = new ScrollView
                 {
                     Content = new StackLayout
@@ -164,7 +202,10 @@ namespace KitchenSupport
                             recipePic,
                             ratingImage,
                             cookingTimeLabel,
-                            listview
+                            ingredientLabel,
+                            listview,
+                            likesLabel,
+                            viewRecipeButton
 
                         }
                     },
@@ -278,6 +319,7 @@ namespace KitchenSupport
                 Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + recipes[count].yummly_id));
             };
             recipePic.GestureRecognizers.Add(tapImage);
+
             Content = new StackLayout
             {
                 Spacing = 20,
