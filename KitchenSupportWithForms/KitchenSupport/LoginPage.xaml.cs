@@ -26,8 +26,8 @@ namespace KitchenSupport
             }
             else
             {
-                var accountResponse = client.GetStringAsync(new Uri(accountUrl));
-                var status = parseAccountResponse(accountResponse.Result);
+                //var accountResponse = client.GetStringAsync(new Uri(accountUrl));
+                //var status = parseAccountResponse(accountResponse.Result);
                 Navigation.PushModalAsync(new NavigationPage(new HomePage()));
             }
             

@@ -29,7 +29,8 @@ namespace KitchenSupport
         private void navigateBack(object sender, EventArgs args)
         {
             //Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
-            Navigation.PopModalAsync();
+            Navigation.PushModalAsync(new NavigationPage(new LoginPage()));
+           // Navigation.PopModalAsync();
         }
         private void logOut(object sender, EventArgs args)
         {
