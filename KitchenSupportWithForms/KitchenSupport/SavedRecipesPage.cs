@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection.Emit;
 using System.Text;
 
@@ -25,7 +26,7 @@ namespace KitchenSupport
             public int rating { get; set; }
             public string[] ingredients { get; set; }
             public int? totalTimeInSeconds { get; set; }
-            public int? likes { get; set; }
+            public int? favorites { get; set; }
 
         }
 
@@ -198,6 +199,10 @@ namespace KitchenSupport
             };
             ListView listview = new ListView();
             listview.RowHeight = 40;
+            listview.ItemSelected += (sender, e) =>
+            {
+                listview.SelectedItem = null;
+            };
 
             List<Ingredient> ingredients = new List<Ingredient>();
             for (int i = 0; i < r.ingredients.Length; i++)
@@ -230,7 +235,18 @@ namespace KitchenSupport
             recipePic.Source = ImageSource.FromUri(new Uri(r.smallImageUrls[0].Substring(0, r.smallImageUrls[0].Length - 4)));
             tapImage.Tapped += (sender, e) =>
             {
-                Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + r.yummly_id));
+                var client = new HttpClient();
+                string url = "http://api.kitchen.support/favorites";
+                string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\"\n}";
+                var httpContent = new StringContent(data);
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PostAsync(new Uri(url), httpContent);
+                var ye = response.Result.StatusCode.ToString();
+                if (response.Result.StatusCode.ToString() != "OK")
+                {
+
+                }
+
             };
             recipePic.GestureRecognizers.Add(tapImage);
 
@@ -243,30 +259,30 @@ namespace KitchenSupport
                 Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + r.yummly_id));
             };
 
-            int likes = (int)r.likes;
-            string likeStatement = "";
+            int favorites = (int)r.favorites;
+            string favoritesStatement = "";
 
-            if (likes == 0 || r.likes == null)
+            if (favorites == 0 || r.favorites == null)
             {
-                likeStatement = "Be the first to like this recipe!";
+                favoritesStatement = "Tap the image to be the first to like this recipe!";
             }
             else
             {
-                likeStatement = "Join the ";
-                if (likes == 1)
+                favoritesStatement = "Tap the image to join the ";
+                if (favorites == 1)
                 {
-                    likeStatement += "1 person who has liked this recipe!";
+                    favoritesStatement += "1 person who has favorited this recipe!";
                 }
                 else
                 {
-                    likeStatement += likes.ToString() + " people who have liked this recipe!";
+                    favoritesStatement += favorites.ToString() + " people who have favorited this recipe!";
                 }
             }
 
-            Label likesLabel = new Label
+            Label favoritesLabel = new Label
             {
-                Text = likeStatement,
-                Font = Font.BoldSystemFontOfSize(17),
+                Text = favoritesStatement,
+                Font = Font.BoldSystemFontOfSize(15),
                 HorizontalOptions = LayoutOptions.Center
             };
 
@@ -282,11 +298,11 @@ namespace KitchenSupport
                             back,
                             header,
                             recipePic,
+                            favoritesLabel,
                             ratingImage,
                             cookingTimeLabel,
                             ingredientLabel,
                             listview,
-                            likesLabel,
                             viewRecipeButton
 
                         }

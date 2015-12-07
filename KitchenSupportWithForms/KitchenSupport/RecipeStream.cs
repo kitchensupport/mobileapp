@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 using Xamarin.Forms;
 using Newtonsoft.Json.Linq;
+using System.Net.Http.Headers;
 
 namespace KitchenSupport
 {
@@ -152,7 +153,18 @@ namespace KitchenSupport
                 recipePic.Source = ImageSource.FromUri(new Uri(r.smallImageUrls[0].Substring(0, r.smallImageUrls[0].Length - 4)));
                 tapImage.Tapped += (sender, e) =>
                 {
-                    Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + r.yummly_id));
+                    var client = new HttpClient();
+                    string url = "http://api.kitchen.support/favorites";
+                    string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\"\n}";
+                    var httpContent = new StringContent(data);
+                    httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    var response = client.PostAsync(new Uri(url), httpContent);
+                    var ye = response.Result.StatusCode.ToString();
+                    if (response.Result.StatusCode.ToString() != "OK")
+                    {
+
+                    }
+
                 };
                 recipePic.GestureRecognizers.Add(tapImage);
                 
