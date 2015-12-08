@@ -18,8 +18,8 @@ namespace KitchenSupport
         {
             public List<recipe> recipes { get; set; }
         }
-
-        public List<recipe> parseRecipes(string request)
+        public static ListView lv, lv2, lv3;
+        public static List<recipe> parseRecipes(string request)
         {
             var result = JsonConvert.DeserializeObject<Recipes>(request);
             return result.recipes;
@@ -36,7 +36,7 @@ namespace KitchenSupport
                 return;
             }
             var recipes = parseRecipes(response.Result);
-            ListView lv = new ListView
+            lv = new ListView
             {
                 RowHeight = 45
             };
@@ -55,7 +55,7 @@ namespace KitchenSupport
                 Font = Font.BoldSystemFontOfSize(50),
                 HorizontalOptions = LayoutOptions.Center
             };
-            lv.ItemSelected += async (sender, e) =>
+            lv.ItemSelected += (sender, e) =>
             {
                 if (e.SelectedItem == null)
                 {
@@ -63,7 +63,7 @@ namespace KitchenSupport
                 }
                 lv.SelectedItem = null;
                 //await Navigation.PushModalAsync(new LikedRecipeDetails((recipe)e.SelectedItem));
-                await Navigation.PushModalAsync(new RecipeDetails((recipe)e.SelectedItem));
+                Navigation.PushModalAsync(new RecipeDetails((recipe)e.SelectedItem));
             };
             url = "http://api.kitchen.support/favorites?offset=0&limit=30&api_token=";
             url += token;
@@ -79,7 +79,7 @@ namespace KitchenSupport
                 HorizontalOptions = LayoutOptions.Center
             };
             recipes = parseRecipes(response.Result);
-            ListView lv2 = new ListView
+            lv2 = new ListView
             {
                 RowHeight = 45
             };
@@ -109,7 +109,7 @@ namespace KitchenSupport
                 HorizontalOptions = LayoutOptions.Center
             };
             recipes = parseRecipes(response.Result);
-            ListView lv3 = new ListView
+            lv3 = new ListView
             {
                 RowHeight = 45
             };
@@ -147,6 +147,7 @@ namespace KitchenSupport
             {
                 Navigation.PopModalAsync();
             };
+            
         }
     }
 

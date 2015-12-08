@@ -128,7 +128,6 @@ namespace KitchenSupport
                 {
 
                 }
-
             };
             recipePic.GestureRecognizers.Add(tapImage);
 
@@ -157,6 +156,7 @@ namespace KitchenSupport
                 {
 
                 }
+                
             };
             int favorites = (int)r.favorites;
             string favoritesStatement = "";
@@ -211,7 +211,9 @@ namespace KitchenSupport
             this.Content = scroll;
             back.Clicked += (sender, e) =>
             {
+
                 Navigation.PopModalAsync();
+                
             };
         }
     }
