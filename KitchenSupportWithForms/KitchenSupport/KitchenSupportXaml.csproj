@@ -44,6 +44,8 @@
     <Compile Include="HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="recipe.cs" />
+    <Compile Include="RecipeDetails.cs" />
     <Compile Include="RecipeStream.cs" />
     <Compile Include="ResetPage.xaml.cs">
       <DependentUpon>ResetPage.xaml</DependentUpon>
