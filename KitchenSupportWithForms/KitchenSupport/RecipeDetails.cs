@@ -163,7 +163,7 @@ namespace KitchenSupport
 
             if (favorites == 0 || r.favorites == null)
             {
-                favoritesStatement = "Tap the image to be the first to like this recipe!";
+                favoritesStatement = "Tap the image to be the first to favorite this recipe!";
             }
             else
             {
