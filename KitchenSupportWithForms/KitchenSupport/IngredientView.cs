@@ -109,6 +109,16 @@ namespace KitchenSupport
 
             public AddIngredient(ingredient i)
             {
+                Button back = new Button
+                {
+                    Text = "Back",
+                    HorizontalOptions = LayoutOptions.Start,
+                    VerticalOptions = LayoutOptions.Start
+                };
+                back.Clicked += (sender, e) =>
+                {
+                    Navigation.PopModalAsync();
+                };
 
                 Label header = new Label
                 {
@@ -154,6 +164,7 @@ namespace KitchenSupport
                     VerticalOptions = LayoutOptions.Center,
                     Children =
                 {
+                    back,
                     header,
                     e1,
                     button,
@@ -175,7 +186,7 @@ namespace KitchenSupport
                     else
                     {
                         await Navigation.PushModalAsync(new SearchForIngredient(e1.Text));
-                        this.Content = new StackLayout
+                        /*this.Content = new StackLayout
                         {
                             Spacing = 20,
                             Padding = 50,
@@ -185,7 +196,7 @@ namespace KitchenSupport
                                 success,
                                 next
                             }
-                        };
+                        };*/
                     }
                     //Navigation.PopModalAsync();
                 };
@@ -281,6 +292,20 @@ namespace KitchenSupport
                 var client = new HttpClient();
                 string url = "http://api.kitchen.support/ingredients/" + term + "?limit=30&offset=0";
                 var response = client.GetStringAsync(new Uri(url));
+                var success = new Label
+                {
+                    Text = "Ingredient successfully added!",
+                    Font = Font.BoldSystemFontOfSize(50)
+                };
+                var next = new Button
+                {
+                    Text = "Solid",
+                    BackgroundColor = Color.FromHex("77D065")
+                };
+                next.Clicked += (sender, e) =>
+                {
+                    Navigation.PopModalAsync();
+                };
                 if (response == null)
                 {
 
@@ -343,7 +368,18 @@ namespace KitchenSupport
                         ingredients = parseIngredients(response.Result);
                         IngredientView.listview.ItemsSource = null;
                         IngredientView.listview.ItemsSource = ingredients;
-                        Navigation.PopModalAsync();
+                        this.Content = new StackLayout
+                       {
+                           Spacing = 20,
+                           Padding = 50,
+                           VerticalOptions = LayoutOptions.Center,
+                           Children =
+                           {
+                               success,
+                               next
+                           }
+                       };
+                        //Navigation.PopModalAsync();
                     };
                     this.Content = new StackLayout
                     {
