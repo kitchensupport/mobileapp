@@ -287,53 +287,74 @@ namespace KitchenSupport
                 }
                 var ye = response.Result;
                 var ingredients = parseIngredientSearch(response.Result);
-
-                var listview = new ListView();
-                listview.ItemsSource = ingredients;
-                listview.ItemTemplate = new DataTemplate(typeof(TextCell));
-                listview.ItemTemplate.SetBinding(TextCell.TextProperty, ".term");
-                var header = new Label
+                if (ingredients.Count == 0)
                 {
-                    Text = "Search Results",
-                    Font = Font.BoldSystemFontOfSize(50)
-                };
-                listview.ItemSelected += (sender, e) =>
-                {
-                    if (e.SelectedItem == null)
+                    Label header = new Label
                     {
-                        return;
-                    }
-                    listview.SelectedItem = null;
-                    ingredient i = (ingredient)e.SelectedItem;
-                    client = new HttpClient();
-                    url = "http://api.kitchen.support/pantry";
-                    string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"ingredient_id\" : \"" + i.id + "\"\n}";
-                    var httpContent = new StringContent(data);
-                    httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    var addResponse = client.PostAsync(new Uri(url), httpContent);
-                    if (addResponse.Result.StatusCode.ToString() != "OK")
+                        Text = "Sorry, there were no results for that search. Please try again.",
+                        Font = Font.BoldSystemFontOfSize(30)
+                    };
+                    Content = new StackLayout
                     {
-
-                    }
-                    client = new HttpClient();
-                    url = "http://api.kitchen.support/pantry?offset=0&limit=30&api_token=";
-                    string token = DependencyService.Get<localDataInterface>().load("token");
-                    url += token;
-                    response = client.GetStringAsync(new Uri(url));                    
-                    ingredients = parseIngredients(response.Result);
-                    IngredientView.listview.ItemsSource = null;
-                    IngredientView.listview.ItemsSource = ingredients;
-                    Navigation.PopModalAsync();
-                };
-                this.Content = new StackLayout
+                        Spacing = 20,
+                        Padding = 50,
+                        VerticalOptions = LayoutOptions.Center,
+                        Children =
+                        {
+                            back,
+                            header
+                        }
+                    };
+                }
+                else
                 {
-                    Children =
+                    var listview = new ListView();
+                    listview.ItemsSource = ingredients;
+                    listview.ItemTemplate = new DataTemplate(typeof(TextCell));
+                    listview.ItemTemplate.SetBinding(TextCell.TextProperty, ".term");
+                    var header = new Label
+                    {
+                        Text = "Search Results",
+                        Font = Font.BoldSystemFontOfSize(50)
+                    };
+                    listview.ItemSelected += (sender, e) =>
+                    {
+                        if (e.SelectedItem == null)
+                        {
+                            return;
+                        }
+                        listview.SelectedItem = null;
+                        ingredient i = (ingredient)e.SelectedItem;
+                        client = new HttpClient();
+                        url = "http://api.kitchen.support/pantry";
+                        string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"ingredient_id\" : \"" + i.id + "\"\n}";
+                        var httpContent = new StringContent(data);
+                        httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                        var addResponse = client.PostAsync(new Uri(url), httpContent);
+                        if (addResponse.Result.StatusCode.ToString() != "OK")
+                        {
+
+                        }
+                        client = new HttpClient();
+                        url = "http://api.kitchen.support/pantry?offset=0&limit=30&api_token=";
+                        string token = DependencyService.Get<localDataInterface>().load("token");
+                        url += token;
+                        response = client.GetStringAsync(new Uri(url));
+                        ingredients = parseIngredients(response.Result);
+                        IngredientView.listview.ItemsSource = null;
+                        IngredientView.listview.ItemsSource = ingredients;
+                        Navigation.PopModalAsync();
+                    };
+                    this.Content = new StackLayout
+                    {
+                        Children =
                     {
                         back,
                         header,
                         listview
                     }
-                };
+                    };
+                }
             }
         }
 
