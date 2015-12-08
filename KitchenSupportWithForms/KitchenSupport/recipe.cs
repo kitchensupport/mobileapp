@@ -16,6 +16,9 @@ namespace KitchenSupport
         public string[] ingredients { get; set; }
         public int? totalTimeInSeconds { get; set; }
         public int? favorites { get; set; }
+        public bool liked { get; set; }
+        public bool favorited { get; set; }
+        public bool completed { get; set; }
 
     }
 }

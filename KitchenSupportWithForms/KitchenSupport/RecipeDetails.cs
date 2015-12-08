@@ -16,6 +16,63 @@ namespace KitchenSupport
         {
             var tapImage = new TapGestureRecognizer();
 
+            Button dislike = new Button
+            {
+                Text = "Dislike this recipe",
+                BackgroundColor = Color.FromHex("77D065")
+            };
+            dislike.Clicked += (sender, e) =>
+            {
+                var likeClient = new HttpClient();
+                string likeUrl = "http://api.kitchen.support/likes";
+                string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\",\n    \"value\" : " + "false" + "\n}";
+                var httpContent = new StringContent(data);
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var likeResponse = likeClient.PostAsync(new Uri(likeUrl), httpContent);
+                var ye = likeResponse.Result.StatusCode.ToString();
+                if (likeResponse.Result.StatusCode.ToString() != "OK")
+                {
+
+                }
+            };
+            Button unfavorite = new Button
+            {
+                Text = "Unfavorite this recipe",
+                BackgroundColor = Color.FromHex("77D065")
+            };
+            unfavorite.Clicked += (sender, e) =>
+            {
+                var favClient = new HttpClient();
+                string favUrl = "http://api.kitchen.support/favorites";
+                string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\",\n    \"value\" : " + "false" + "\n}";
+                var httpContent = new StringContent(data);
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var favResponse = favClient.PostAsync(new Uri(favUrl), httpContent);
+                var ye = favResponse.Result.StatusCode.ToString();
+                if (favResponse.Result.StatusCode.ToString() != "OK")
+                {
+
+                }
+            };
+            Button uncomplete = new Button
+            {
+                Text = "Unfavorite this recipe",
+                BackgroundColor = Color.FromHex("77D065")
+            };
+            uncomplete.Clicked += (sender, e) =>
+            {
+                var compClient = new HttpClient();
+                string compUrl = "http://api.kitchen.support/completed";
+                string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\",\n    \"value\" : " + "false" + "\n}";
+                var httpContent = new StringContent(data);
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var favResponse = compClient.PostAsync(new Uri(compUrl), httpContent);
+                var ye = favResponse.Result.StatusCode.ToString();
+                if (favResponse.Result.StatusCode.ToString() != "OK")
+                {
+
+                }
+            };
             string[] ratingImageLinks = new string[] { "http://i.imgur.com/7qq8zdR.png", "http://i.imgur.com/BRwowMP.png", "http://i.imgur.com/dNUdKiO.png", "http://i.imgur.com/zK4JmCG.png", "http://i.imgur.com/61WSiZf.png", "http://i.imgur.com/7J7BYuv.png" };
             var ratingImage = new Image { Aspect = Aspect.AspectFit };
             ratingImage.Source = ImageSource.FromUri(new Uri(ratingImageLinks[r.rating]));
@@ -156,7 +213,7 @@ namespace KitchenSupport
                 {
 
                 }
-                
+
             };
             int favorites = (int)r.favorites;
             string favoritesStatement = "";
@@ -177,6 +234,10 @@ namespace KitchenSupport
                     favoritesStatement += favorites.ToString() + " people who have favorited this recipe!";
                 }
             }
+            if (r.favorited == true)
+            {
+                favoritesStatement = "You have already favorited this recipe!";
+            }
 
             Label favoritesLabel = new Label
             {
@@ -184,15 +245,12 @@ namespace KitchenSupport
                 Font = Font.BoldSystemFontOfSize(15),
                 HorizontalOptions = LayoutOptions.Center
             };
-
-            var scroll = new ScrollView
+            var stack = new StackLayout
             {
-                Content = new StackLayout
-                {
-                    Spacing = 20,
-                    Padding = 50,
-                    VerticalOptions = LayoutOptions.Center,
-                    Children =
+                Spacing = 20,
+                Padding = 50,
+                VerticalOptions = LayoutOptions.Center,
+                Children =
                         {
                             back,
                             header,
@@ -206,9 +264,26 @@ namespace KitchenSupport
                             markComplete
 
                         }
-                },
             };
-            this.Content = scroll;
+            if (r.favorited == true)
+            {
+                stack.Children.Add(unfavorite);
+            }
+            else if (r.liked == true)
+            {
+                stack.Children.Add(dislike);
+            }
+            else if (r.completed == true)
+            {
+                stack.Children.Add(uncomplete);
+            }
+            var scroll = new ScrollView
+            {
+                Content = stack
+            };
+            this.Content = scroll;  
+            
+            
             back.Clicked += (sender, e) =>
             {
 

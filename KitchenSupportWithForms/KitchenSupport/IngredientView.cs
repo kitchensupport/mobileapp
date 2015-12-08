@@ -63,10 +63,37 @@ namespace KitchenSupport
             listview.ItemTemplate.SetBinding(TextCell.TextProperty, ".term");
             Button button = new Button();
             button.Text = "Add Ingredient";
+            listview.ItemSelected += (sender, e) =>
+            {
+                if (e.SelectedItem == null)
+                {
+                    return;
+                }
+                listview.SelectedItem = null;
+                ingredient i = (ingredient)e.SelectedItem;
+                client = new HttpClient();
+                url = "http://api.kitchen.support/pantry";
+                string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"ingredient_id\" : \"" + i.id + "\",\n    \"value\" : \"" + false + "\"\n}";
+                var httpContent = new StringContent(data);
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var addResponse = client.PostAsync(new Uri(url), httpContent);
+                 ye = addResponse.Result.StatusCode.ToString();
+                if (addResponse.Result.StatusCode.ToString() != "OK")
+                {
+
+                }
+                client = new HttpClient();
+                url = "http://api.kitchen.support/pantry?offset=0&limit=30&api_token=";
+                token = DependencyService.Get<localDataInterface>().load("token");
+                url += token;
+                response = client.GetStringAsync(new Uri(url));
+                ingredients = parseIngredients(response.Result);
+                IngredientView.listview.ItemsSource = null;
+                IngredientView.listview.ItemsSource = ingredients;
+            };
 
 
-
-            button.Clicked += (sender, e) =>
+                button.Clicked += (sender, e) =>
             {
                 ingredient newIngredient = new ingredient();
                 Navigation.PushModalAsync(new AddIngredient(newIngredient));

@@ -131,20 +131,19 @@ namespace KitchenSupport
                 }
                 var likeClient = new HttpClient();
                 string likeUrl = "http://api.kitchen.support/likes";
-                string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + recipes[count].id + "\"\n}";
-                var dislikeRequest = (HttpWebRequest)WebRequest.Create(likeUrl);
-                dislikeRequest.Method = "DELETE";
-                dislikeRequest.ContentType = "application/json";
-                dislikeRequest.Accept = "application/json";
-                var dislikeResponse = dislikeRequest.GetResponseAsync();
-                if (dislikeResponse.Status.ToString() != "OK")
+                string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + recipes[count].id + "\",\n    \"value\" : " + "false" + "\n}";
+                var httpContent = new StringContent(data);
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var likeResponse = client.PostAsync(new Uri(likeUrl), httpContent);
+                var ye = likeResponse.Result.StatusCode.ToString();
+                if (likeResponse.Result.StatusCode.ToString() != "OK")
                 {
 
                 }
                 count++;
                 recipePic.Source = ImageSource.FromUri(new Uri(recipes[count].smallImageUrls[0].Substring(0, recipes[count].smallImageUrls[0].Length - 4)));
                 recipeName.Text = recipes[count].recipeName;
-                
+
             };
             back.Clicked += (sender, e) =>
             {
