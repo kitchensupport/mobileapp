@@ -17,18 +17,34 @@ namespace KitchenSupport
         public static ListView listview;
         public static List<ingredient> ingredients;
 
-        public List<ingredient> parseIngredients(string request)
+        public static List<ingredient> parseIngredients(string request)
+        {
+            var result = JsonConvert.DeserializeObject<pantryResponse>(request);
+            return result.items;
+        }
+        public static List<ingredient> parseIngredientSearch(string request)
         {
             var result = JsonConvert.DeserializeObject<ingredientResponse>(request);
-            return result.items;
+            return result.ingredients;
         }
         public IngredientView()
         {
+            Button back = new Button
+            {
+                Text = "Back",
+                HorizontalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.Start
+            };
+            back.Clicked += (sender, e) =>
+            {
+                Navigation.PopModalAsync();
+            };
             var client = new HttpClient();
             string url = "http://api.kitchen.support/pantry?offset=0&limit=30&api_token=";
             string token = DependencyService.Get<localDataInterface>().load("token");
             url += token;
             var response = client.GetStringAsync(new Uri(url));
+            var ye = response.Result;
             List<ingredient> ingredients = parseIngredients(response.Result);
             Label header = new Label
             {
@@ -50,17 +66,18 @@ namespace KitchenSupport
 
 
 
-            button.Clicked += async (sender, e) =>
+            button.Clicked += (sender, e) =>
             {
                 ingredient newIngredient = new ingredient();
-                await Navigation.PushModalAsync(new AddIngredient(newIngredient));
+                Navigation.PushModalAsync(new AddIngredient(newIngredient));
+                
             };
-
             // Build the page.
             this.Content = new StackLayout
             {
                 Children =
                 {
+                    back,
                     header,
                     listview,
                     button
@@ -69,7 +86,7 @@ namespace KitchenSupport
 
         }
         
-        public class ingredientResponse
+        public class pantryResponse
         {
             public List<ingredient> items { get; set; }
         }
@@ -81,7 +98,10 @@ namespace KitchenSupport
             public string term { get; set; }
 
         }
-
+        public class ingredientResponse
+        {
+            public List<ingredient> ingredients { get; set; }
+        }
 
 
         public class AddIngredient : ContentPage
@@ -99,11 +119,11 @@ namespace KitchenSupport
                 };
                 Entry e1 = new Entry
                 {
-                    Placeholder = "Enter New Ingredient"
+                    Placeholder = "Enter New Ingredient search term"
                 };
                 Button button = new Button
                 {
-                    Text = "Enter",
+                    Text = "Search",
                     TextColor = Color.White,
                     BackgroundColor = Color.FromHex("77D065")
                 };
@@ -112,6 +132,20 @@ namespace KitchenSupport
                     Text = "Scan Ingredient Barcode",
                     TextColor = Color.White,
                     BackgroundColor = Color.FromHex("77D065")
+                };
+                var success = new Label
+                {
+                    Text = "Ingredient successfully added!",
+                    Font = Font.BoldSystemFontOfSize(50)
+                };
+                var next = new Button
+                {
+                    Text = "Solid",
+                    BackgroundColor = Color.FromHex("77D065")
+                };
+                next.Clicked += (sender, e) =>
+                {
+                    Navigation.PopModalAsync();
                 };
                 this.Content = new StackLayout
                 {
@@ -128,12 +162,25 @@ namespace KitchenSupport
                 };
                 button.Clicked += async (sender, e) =>
                 {
-                    i.searchValue = e1.Text;
+                    /*i.searchValue = e1.Text;
                     i.term = e1.Text;
                     ingredients.Add(i);
                     listview.ItemsSource = null;
                     listview.ItemsSource = ingredients;
-                    await Navigation.PopModalAsync();
+                    await Navigation.PopModalAsync();*/
+                    await Navigation.PushModalAsync(new SearchForIngredient(e1.Text));
+                    this.Content = new StackLayout
+                    {
+                        Spacing = 20,
+                        Padding = 50,
+                        VerticalOptions = LayoutOptions.Center,
+                        Children =
+                        {
+                            success,
+                            next
+                        }
+                    };
+                    //Navigation.PopModalAsync();
                 };
                 button2.Clicked += async (sender, e) =>
                 {
@@ -172,12 +219,24 @@ namespace KitchenSupport
                                     break;
                                 }
                             }
-                            await DisplayAlert("Item Found", name, "OK");
+                            //await DisplayAlert("Item Found", name, "OK");
                             //var json = JObject.Parse (message);
                             //var token = json ["name"];
                             //await DisplayAlert ("Scanner", token.ToString(), "OK");
                             //await storeToken(token.ToString());
-                            e1.Text = name;
+                            //e1.Text = name;
+                            await Navigation.PushModalAsync(new SearchForIngredient(name));
+                            this.Content = new StackLayout
+                            {
+                                Spacing = 20,
+                                Padding = 50,
+                                VerticalOptions = LayoutOptions.Center,
+                                Children =
+                                {
+                                    success,
+                                    next
+                                }
+                            };
                             //await Navigation.PushModalAsync (new NavigationPage(new HomePage()));
                         }
                         else
@@ -196,6 +255,79 @@ namespace KitchenSupport
         public class Items
         {
             public List<Item> data { get; set; }
+        }
+
+        public class SearchForIngredient : ContentPage
+        {
+            public SearchForIngredient(string term)
+            {
+                Button back = new Button
+                {
+                    Text = "back",
+                    HorizontalOptions = LayoutOptions.Start,
+                    VerticalOptions = LayoutOptions.Start
+                };
+                back.Clicked += (sender, e) =>
+                {
+                    Navigation.PopModalAsync();
+                };
+                var client = new HttpClient();
+                string url = "http://api.kitchen.support/ingredients/" + term + "?limit=30&offset=0";
+                var response = client.GetStringAsync(new Uri(url));
+                if (response == null)
+                {
+
+                }
+                var ye = response.Result;
+                var ingredients = parseIngredientSearch(response.Result);
+
+                var listview = new ListView();
+                listview.ItemsSource = ingredients;
+                listview.ItemTemplate = new DataTemplate(typeof(TextCell));
+                listview.ItemTemplate.SetBinding(TextCell.TextProperty, ".term");
+                var header = new Label
+                {
+                    Text = "Search Results",
+                    Font = Font.BoldSystemFontOfSize(50)
+                };
+                listview.ItemSelected += (sender, e) =>
+                {
+                    if (e.SelectedItem == null)
+                    {
+                        return;
+                    }
+                    listview.SelectedItem = null;
+                    ingredient i = (ingredient)e.SelectedItem;
+                    client = new HttpClient();
+                    url = "http://api.kitchen.support/pantry";
+                    string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"ingredient_id\" : \"" + i.id + "\"\n}";
+                    var httpContent = new StringContent(data);
+                    httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    var addResponse = client.PostAsync(new Uri(url), httpContent);
+                    if (addResponse.Result.StatusCode.ToString() != "OK")
+                    {
+
+                    }
+                    client = new HttpClient();
+                    url = "http://api.kitchen.support/pantry?offset=0&limit=30&api_token=";
+                    string token = DependencyService.Get<localDataInterface>().load("token");
+                    url += token;
+                    response = client.GetStringAsync(new Uri(url));                    
+                    ingredients = parseIngredients(response.Result);
+                    IngredientView.listview.ItemsSource = null;
+                    IngredientView.listview.ItemsSource = ingredients;
+                    Navigation.PopModalAsync();
+                };
+                this.Content = new StackLayout
+                {
+                    Children =
+                    {
+                        back,
+                        header,
+                        listview
+                    }
+                };
+            }
         }
 
         public class Item
