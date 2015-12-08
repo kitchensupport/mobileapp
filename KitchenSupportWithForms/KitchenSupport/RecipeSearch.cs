@@ -16,6 +16,7 @@ namespace KitchenSupport
     {
         public RecipeSearch()
         {
+            this.Title = "  Kitchen.Support";
             Button back = new Button
             {
                 Text = "back",
@@ -48,7 +49,7 @@ namespace KitchenSupport
                 }
                 else
                 {
-                    Navigation.PushModalAsync(new RecipeSearchResults(e1.Text));
+                    Navigation.PushModalAsync(new NavigationPage(new RecipeSearchResults(e1.Text)));
                 }
                 
             };
@@ -86,6 +87,7 @@ namespace KitchenSupport
 
         public RecipeSearchResults(string term)
         {
+            this.Title = "  Kitchen.Support";
             var tapImage = new TapGestureRecognizer();
             int count = 0;
             var client = new HttpClient();
@@ -108,7 +110,7 @@ namespace KitchenSupport
             var recipes = parseRecipes(response.Result);
             if (recipes.Count == 0)
             {
-                
+
                 Label header = new Label
                 {
                     Text = "Sorry, there were no results for that search. Please try again.",
@@ -125,7 +127,7 @@ namespace KitchenSupport
                         header
                     }
                 };
-               
+
             }
             else
             {
@@ -213,33 +215,37 @@ namespace KitchenSupport
                     recipeName.Text = recipes[count].recipeName;
 
                 };
-                
+
                 var browser = new WebView();
                 openRecipe.Clicked += async (sender, e) =>
                 {
-                    await Navigation.PushModalAsync(new RecipeDetails(recipes[count]));
+                    await Navigation.PushModalAsync(new NavigationPage(new RecipeDetails(recipes[count])));
                 };
                 tapImage.Tapped += (sender, e) =>
                 {
                     Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + recipes[count].yummly_id));
                 };
                 recipePic.GestureRecognizers.Add(tapImage);
-
-                Content = new StackLayout
+                var scroll = new ScrollView
                 {
-                    Spacing = 20,
-                    Padding = 50,
-                    VerticalOptions = LayoutOptions.Center,
-                    Children = {
-                    back,
-                    header,
-                    recipeName,
-                    recipePic,
-                    like,
-                    dislike,
-                    openRecipe
-                }
+                    Content = new StackLayout
+                    {
+                        Spacing = 20,
+                        Padding = 50,
+                        VerticalOptions = LayoutOptions.Center,
+                        Children =
+                        {
+                            back,
+                            header,
+                            recipeName,
+                            recipePic,
+                            like,
+                            dislike,
+                            openRecipe
+                       }
+                    }
                 };
+                Content = scroll;
             }
         }
     }

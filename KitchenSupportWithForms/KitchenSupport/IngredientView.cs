@@ -29,6 +29,7 @@ namespace KitchenSupport
         }
         public IngredientView()
         {
+            this.Title = "  Kitchen.Support";
             Button back = new Button
             {
                 Text = "Back",
@@ -96,12 +97,15 @@ namespace KitchenSupport
                 button.Clicked += (sender, e) =>
             {
                 ingredient newIngredient = new ingredient();
-                Navigation.PushModalAsync(new AddIngredient(newIngredient));
+                Navigation.PushModalAsync(new NavigationPage(new AddIngredient(newIngredient)));
                 
             };
             // Build the page.
             this.Content = new StackLayout
             {
+                Spacing = 20,
+                Padding = 50,
+                VerticalOptions = LayoutOptions.Center,
                 Children =
                 {
                     back,
@@ -136,6 +140,7 @@ namespace KitchenSupport
 
             public AddIngredient(ingredient i)
             {
+                this.Title = "  Kitchen.Support";
                 Button back = new Button
                 {
                     Text = "Back",
@@ -212,7 +217,7 @@ namespace KitchenSupport
                     }
                     else
                     {
-                        await Navigation.PushModalAsync(new SearchForIngredient(e1.Text));
+                        await Navigation.PushModalAsync(new NavigationPage(new SearchForIngredient(e1.Text)));
                         /*this.Content = new StackLayout
                         {
                             Spacing = 20,
@@ -270,7 +275,7 @@ namespace KitchenSupport
                             //await DisplayAlert ("Scanner", token.ToString(), "OK");
                             //await storeToken(token.ToString());
                             //e1.Text = name;
-                            await Navigation.PushModalAsync(new SearchForIngredient(name));
+                            await Navigation.PushModalAsync(new NavigationPage(new SearchForIngredient(name)));
                             this.Content = new StackLayout
                             {
                                 Spacing = 20,
@@ -306,6 +311,7 @@ namespace KitchenSupport
         {
             public SearchForIngredient(string term)
             {
+                this.Title = "  Kitchen.Support";
                 Button back = new Button
                 {
                     Text = "back",

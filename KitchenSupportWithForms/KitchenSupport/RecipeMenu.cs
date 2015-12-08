@@ -12,6 +12,7 @@ namespace KitchenSupport
     {
         public RecipeMenu()
         {
+            this.Title = "  Kitchen.Support";
             Button back = new Button
             {
                 Text = "back",
@@ -33,7 +34,7 @@ namespace KitchenSupport
             };
             stream.Clicked += (sender, e) =>
             {
-                Navigation.PushModalAsync(new RecipeStream());
+                Navigation.PushModalAsync(new NavigationPage(new RecipeStream()));
             };
             Button search = new Button
             {
@@ -42,7 +43,7 @@ namespace KitchenSupport
             };
             search.Clicked += (sender, e) =>
             {
-                Navigation.PushModalAsync(new RecipeSearch());
+                Navigation.PushModalAsync(new NavigationPage(new RecipeSearch()));
             };
             Content = new StackLayout
             {

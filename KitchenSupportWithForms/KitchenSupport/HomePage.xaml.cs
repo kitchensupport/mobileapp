@@ -9,17 +9,18 @@ namespace KitchenSupport
         
         public HomePage()
         {
+            this.Title = "  Kitchen.Support";
             InitializeComponent();
         }
 
         private void findRecipes(object sender, EventArgs args)
         {
-            Navigation.PushModalAsync(new RecipeMenu());
+            Navigation.PushModalAsync(new NavigationPage(new RecipeMenu()));
         }
 
         private void viewSavedRecipes(object sender, EventArgs args)
         {
-            Navigation.PushModalAsync(new SavedRecipesPage());
+            Navigation.PushModalAsync(new NavigationPage(new SavedRecipesPage()));
         }
 
         private void navigateToIngredientsView(object sender, EventArgs args)

@@ -14,6 +14,7 @@ namespace KitchenSupport
     {
         public RecipeDetails(recipe r)
         {
+            this.Title = "  Kitchen.Support";
             var tapImage = new TapGestureRecognizer();
 
             Button dislike = new Button
@@ -56,7 +57,7 @@ namespace KitchenSupport
             };
             Button uncomplete = new Button
             {
-                Text = "Unfavorite this recipe",
+                Text = "Mark as incomplete",
                 BackgroundColor = Color.FromHex("77D065")
             };
             uncomplete.Clicked += (sender, e) =>
@@ -260,20 +261,24 @@ namespace KitchenSupport
                             cookingTimeLabel,
                             ingredientLabel,
                             listview,
-                            viewRecipeButton,
-                            markComplete
+                            viewRecipeButton
+                            
 
                         }
             };
+            if (r.completed == false)
+            {
+                stack.Children.Add(markComplete);
+            }
             if (r.favorited == true)
             {
                 stack.Children.Add(unfavorite);
             }
-            else if (r.liked == true)
+            if (r.liked == true)
             {
                 stack.Children.Add(dislike);
             }
-            else if (r.completed == true)
+            if (r.completed == true)
             {
                 stack.Children.Add(uncomplete);
             }

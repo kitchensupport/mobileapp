@@ -26,11 +26,13 @@ namespace KitchenSupport
         }
         public SavedRecipesPage()
         {
+            this.Title = "  Kitchen.Support";
             var client = new HttpClient();
             string url = "http://api.kitchen.support/likes?offset=0&limit=30&api_token=";
             string token = DependencyService.Get<localDataInterface>().load("token");
             url += token;
             var response = client.GetStringAsync(new Uri(url));
+            
             if (response == null)
             {
                 return;
@@ -63,7 +65,7 @@ namespace KitchenSupport
                 }
                 lv.SelectedItem = null;
                 //await Navigation.PushModalAsync(new LikedRecipeDetails((recipe)e.SelectedItem));
-                Navigation.PushModalAsync(new RecipeDetails((recipe)e.SelectedItem));
+                Navigation.PushModalAsync(new NavigationPage(new RecipeDetails((recipe)e.SelectedItem)));
             };
             url = "http://api.kitchen.support/favorites?offset=0&limit=30&api_token=";
             url += token;
@@ -94,11 +96,12 @@ namespace KitchenSupport
                     return;
                 }
                 lv2.SelectedItem = null;
-                await Navigation.PushModalAsync(new RecipeDetails((recipe)e.SelectedItem));
+                await Navigation.PushModalAsync(new NavigationPage(new RecipeDetails((recipe)e.SelectedItem)));
             };
             url = "http://api.kitchen.support/completed?offset=0&limit=30&api_token=";
             url += token;
             response = client.GetStringAsync(new Uri(url));
+            var garrett = response.Result.ToString();
             if (response == null)
             {
                 return;
@@ -124,7 +127,7 @@ namespace KitchenSupport
                     return;
                 }
                 lv3.SelectedItem = null;
-                await Navigation.PushModalAsync(new RecipeDetails((recipe)e.SelectedItem));
+                await Navigation.PushModalAsync(new NavigationPage(new RecipeDetails((recipe)e.SelectedItem)));
             };
             var scroll = new ScrollView
             {
@@ -132,6 +135,9 @@ namespace KitchenSupport
 
                 Content = new StackLayout
                 {
+                    Spacing = 20,
+                    Padding = 50,
+                    VerticalOptions = LayoutOptions.Center,
                     Children = {
                     back,
                     label,

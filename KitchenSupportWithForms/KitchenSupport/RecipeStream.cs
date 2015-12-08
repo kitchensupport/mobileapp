@@ -36,6 +36,7 @@ namespace KitchenSupport
 
         public RecipeStream()
         {
+            this.Title = "  Kitchen.Support";
             var tapImage = new TapGestureRecognizer();
             int count = 0;
             var client = new HttpClient();
@@ -152,20 +153,21 @@ namespace KitchenSupport
             var browser = new WebView();
             openRecipe.Clicked += async (sender, e) =>
             {
-                await Navigation.PushModalAsync(new RecipeDetails(recipes[count]));
+                await Navigation.PushModalAsync(new NavigationPage(new RecipeDetails(recipes[count])));
             };
             tapImage.Tapped += (sender, e) =>
             {
                 Device.OpenUri(new Uri("http://www.yummly.com/recipe/" + recipes[count].yummly_id));
             };
             recipePic.GestureRecognizers.Add(tapImage);
-
-            Content = new StackLayout
+            var scroll = new ScrollView
             {
-                Spacing = 20,
-                Padding = 50,
-                VerticalOptions = LayoutOptions.Center,
-                Children = {
+                Content = new StackLayout
+                {
+                    Spacing = 20,
+                    Padding = 50,
+                    VerticalOptions = LayoutOptions.Center,
+                    Children = {
                     back,
                     header,
                     recipeName,
@@ -174,7 +176,9 @@ namespace KitchenSupport
                     dislike,
                     openRecipe
                 }
+                }
             };
+            Content = scroll;
         }
     }
 }
