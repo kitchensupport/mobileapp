@@ -46,6 +46,8 @@
     </Compile>
     <Compile Include="recipe.cs" />
     <Compile Include="RecipeDetails.cs" />
+    <Compile Include="RecipeMenu.cs" />
+    <Compile Include="RecipeSearch.cs" />
     <Compile Include="RecipeStream.cs" />
     <Compile Include="ResetPage.xaml.cs">
       <DependentUpon>ResetPage.xaml</DependentUpon>

@@ -168,18 +168,25 @@ namespace KitchenSupport
                     listview.ItemsSource = null;
                     listview.ItemsSource = ingredients;
                     await Navigation.PopModalAsync();*/
-                    await Navigation.PushModalAsync(new SearchForIngredient(e1.Text));
-                    this.Content = new StackLayout
+                    if (e1.Text == "")
                     {
-                        Spacing = 20,
-                        Padding = 50,
-                        VerticalOptions = LayoutOptions.Center,
-                        Children =
+
+                    }
+                    else
+                    {
+                        await Navigation.PushModalAsync(new SearchForIngredient(e1.Text));
+                        this.Content = new StackLayout
                         {
-                            success,
-                            next
-                        }
-                    };
+                            Spacing = 20,
+                            Padding = 50,
+                            VerticalOptions = LayoutOptions.Center,
+                            Children =
+                            {
+                                success,
+                                next
+                            }
+                        };
+                    }
                     //Navigation.PopModalAsync();
                 };
                 button2.Clicked += async (sender, e) =>

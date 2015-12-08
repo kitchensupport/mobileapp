@@ -13,7 +13,7 @@ namespace KitchenSupport
 
         private void findRecipes(object sender, EventArgs args)
         {
-            Navigation.PushModalAsync(new RecipeStream());
+            Navigation.PushModalAsync(new RecipeMenu());
         }
 
         private void viewSavedRecipes(object sender, EventArgs args)
