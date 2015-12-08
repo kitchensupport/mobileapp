@@ -15,6 +15,20 @@ namespace KitchenSupport
     {
         public LoginPage()
         {
+            var activityIndicator = new ActivityIndicator
+            {
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.CenterAndExpand
+            };
+            Content = new StackLayout
+            {
+                Children =
+                {
+                    activityIndicator
+                }
+            };
+            activityIndicator.IsVisible = true;
+            activityIndicator.IsRunning = true;
             string accountUrl = "http://api.kitchen.support/account?api_token=";
             accountUrl += DependencyService.Get<localDataInterface>().load("token");
             //accountUrl += "yolo";
@@ -22,10 +36,12 @@ namespace KitchenSupport
             var accountResponseTest = client.GetAsync(new Uri(accountUrl));
             if (accountResponseTest.Result.StatusCode.ToString() != "OK")
             {
+                IsBusy = !IsBusy;
                 InitializeComponent();
             }
             else
             {
+                IsBusy = !IsBusy;
                 //var accountResponse = client.GetStringAsync(new Uri(accountUrl));
                 //var status = parseAccountResponse(accountResponse.Result);
                 Navigation.PushModalAsync(new NavigationPage(new HomePage()));
