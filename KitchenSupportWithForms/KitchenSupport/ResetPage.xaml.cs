@@ -19,21 +19,28 @@ namespace KitchenSupport
 
         private void submitClicked(object sender, EventArgs args)
         {
-            var client = new System.Net.Http.HttpClient();
-            string url = "http://api.kitchen.support/accounts/reset/request";
-            string data = "{\n    \"email\" : \"" + email.Text + "\"\n}";
-            var httpContent = new StringContent(data);
-            httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            var response = client.PostAsync(new Uri(url), httpContent);
-
-            if (response.Result.StatusCode.ToString() == "OK")
+            if (email.Text == "")
             {
-                //ContentPage conformationPage = new ConformationPage();
-                Navigation.PopModalAsync();
+                DisplayAlert("Alert", "You haven't entered anything!", "OK");
             }
             else
             {
-                throw new Exception("Bad response from server forgot password request.");
+                var client = new System.Net.Http.HttpClient();
+                string url = "http://api.kitchen.support/accounts/reset/request";
+                string data = "{\n    \"email\" : \"" + email.Text + "\"\n}";
+                var httpContent = new StringContent(data);
+                httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var response = client.PostAsync(new Uri(url), httpContent);
+
+                if (response.Result.StatusCode.ToString() == "OK")
+                {
+                    //ContentPage conformationPage = new ConformationPage();
+                    Navigation.PopModalAsync();
+                }
+                else
+                {
+                    throw new Exception("Bad response from server forgot password request.");
+                }
             }
         }
     }
