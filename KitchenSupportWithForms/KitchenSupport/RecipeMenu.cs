@@ -27,6 +27,12 @@ namespace KitchenSupport
                 Text = "Recipe Main Menu",
                 Font = Font.BoldSystemFontOfSize(50),
             };
+            var tapHead = new TapGestureRecognizer();
+            tapHead.Tapped += (sender, e) =>
+            {
+                Navigation.PushModalAsync(new NavigationPage(new RecipeInterface()));
+            };
+            header.GestureRecognizers.Add(tapHead);
             Button stream = new Button
             {
                 Text = "Recipe Stream",

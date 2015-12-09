@@ -24,7 +24,7 @@ namespace KitchenSupport
             };
             dislike.Clicked += (sender, e) =>
             {
-                SavedRecipesPage.listChanged = true;
+               
                 var likeClient = new HttpClient();
                 string likeUrl = "http://api.kitchen.support/likes";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\",\n    \"value\" : " + "false" + "\n}";
@@ -56,7 +56,7 @@ namespace KitchenSupport
             };
             unfavorite.Clicked += (sender, e) =>
             {
-                SavedRecipesPage.listChanged = true;
+              
                 var favClient = new HttpClient();
                 string favUrl = "http://api.kitchen.support/favorites";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\",\n    \"value\" : " + "false" + "\n}";
@@ -88,7 +88,7 @@ namespace KitchenSupport
             };
             uncomplete.Clicked += (sender, e) =>
             {
-                SavedRecipesPage.listChanged = true;
+          
                 var compClient = new HttpClient();
                 string compUrl = "http://api.kitchen.support/completed";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\",\n    \"value\" : " + "false" + "\n}";
@@ -215,7 +215,7 @@ namespace KitchenSupport
             recipePic.Source = ImageSource.FromUri(new Uri(r.smallImageUrls[0].Substring(0, r.smallImageUrls[0].Length - 4)));
             tapImage.Tapped += (sender, e) =>
             {
-                SavedRecipesPage.listChanged = true;
+             
                 var client = new HttpClient();
                 string url = "http://api.kitchen.support/favorites";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\"\n}";
@@ -244,7 +244,7 @@ namespace KitchenSupport
 
             markComplete.Clicked += (sender, e) =>
             {
-                SavedRecipesPage.listChanged = true;
+  
                 var client = new HttpClient();
                 string url = "http://api.kitchen.support/completed";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\"\n}";

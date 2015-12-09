@@ -74,6 +74,7 @@ namespace KitchenSupport
                 {
                     return;
                 }
+                ingredients.Remove((ingredient)e.SelectedItem);
                 listview.SelectedItem = null;
                 ingredient i = (ingredient)e.SelectedItem;
                 client = new HttpClient();
@@ -92,13 +93,12 @@ namespace KitchenSupport
                 token = DependencyService.Get<localDataInterface>().load("token");
                 url += token;
                 response = client.GetStringAsync(new Uri(url));
-                ingredients = parseIngredients(response.Result);
+                //ingredients = parseIngredients(response.Result);
                 IngredientView.listview.ItemsSource = null;
                 IngredientView.listview.ItemsSource = ingredients;
             };
 
-
-                button.Clicked += (sender, e) =>
+            button.Clicked += (sender, e) =>
             {
                 ingredient newIngredient = new ingredient();
                 Navigation.PushModalAsync(new NavigationPage(new AddIngredient(newIngredient)));
