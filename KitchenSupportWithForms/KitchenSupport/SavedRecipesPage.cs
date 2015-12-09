@@ -129,6 +129,7 @@ namespace KitchenSupport
                 lv3.SelectedItem = null;
                 await Navigation.PushModalAsync(new NavigationPage(new RecipeDetails((recipe)e.SelectedItem)));
             };
+            
             var scroll = new ScrollView
             {
 

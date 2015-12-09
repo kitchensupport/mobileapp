@@ -154,6 +154,7 @@ namespace KitchenSupport
             openRecipe.Clicked += async (sender, e) =>
             {
                 await Navigation.PushModalAsync(new NavigationPage(new RecipeDetails(recipes[count])));
+                
             };
             tapImage.Tapped += (sender, e) =>
             {

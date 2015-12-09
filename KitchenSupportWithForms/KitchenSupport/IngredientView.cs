@@ -30,6 +30,10 @@ namespace KitchenSupport
         public IngredientView()
         {
             this.Title = "  Kitchen.Support";
+            Label instructions = new Label
+            {
+                Text = "Tap on an ingredient to remove it"
+            };
             Button back = new Button
             {
                 Text = "Back",
@@ -74,7 +78,7 @@ namespace KitchenSupport
                 ingredient i = (ingredient)e.SelectedItem;
                 client = new HttpClient();
                 url = "http://api.kitchen.support/pantry";
-                string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"ingredient_id\" : \"" + i.id + "\",\n    \"value\" : \"" + false + "\"\n}";
+                string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"ingredient_id\" : \"" + i.id + "\",\n    \"value\" : \"" + "false" + "\"\n}";
                 var httpContent = new StringContent(data);
                 httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 var addResponse = client.PostAsync(new Uri(url), httpContent);
@@ -109,7 +113,9 @@ namespace KitchenSupport
                 Children =
                 {
                     back,
+                    
                     header,
+                    instructions,
                     listview,
                     button
                 }
@@ -366,6 +372,10 @@ namespace KitchenSupport
                 }
                 else
                 {
+                    Label instructions = new Label
+                    {
+                        Text = "Please select an ingredient"
+                    };
                     var listview = new ListView();
                     listview.ItemsSource = ingredients;
                     listview.ItemTemplate = new DataTemplate(typeof(TextCell));
@@ -420,6 +430,7 @@ namespace KitchenSupport
                     {
                         back,
                         header,
+                        instructions,
                         listview
                     }
                     };

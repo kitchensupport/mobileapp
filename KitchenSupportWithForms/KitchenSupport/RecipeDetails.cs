@@ -24,6 +24,7 @@ namespace KitchenSupport
             };
             dislike.Clicked += (sender, e) =>
             {
+                SavedRecipesPage.listChanged = true;
                 var likeClient = new HttpClient();
                 string likeUrl = "http://api.kitchen.support/likes";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\",\n    \"value\" : " + "false" + "\n}";
@@ -35,6 +36,18 @@ namespace KitchenSupport
                 {
 
                 }
+                var client = new HttpClient();
+                var url = "http://api.kitchen.support/likes?offset=0&limit=30&api_token=";
+                url += DependencyService.Get<localDataInterface>().load("token");
+                var response = client.GetStringAsync(new Uri(url));
+
+                if (response == null)
+                {
+                    return;
+                }
+                var recipes = SavedRecipesPage.parseRecipes(response.Result);
+                SavedRecipesPage.lv.ItemsSource = null;
+                SavedRecipesPage.lv.ItemsSource = recipes;
             };
             Button unfavorite = new Button
             {
@@ -43,6 +56,7 @@ namespace KitchenSupport
             };
             unfavorite.Clicked += (sender, e) =>
             {
+                SavedRecipesPage.listChanged = true;
                 var favClient = new HttpClient();
                 string favUrl = "http://api.kitchen.support/favorites";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\",\n    \"value\" : " + "false" + "\n}";
@@ -54,6 +68,18 @@ namespace KitchenSupport
                 {
 
                 }
+                var client = new HttpClient();
+                var url = "http://api.kitchen.support/favorites?offset=0&limit=30&api_token=";
+                url += DependencyService.Get<localDataInterface>().load("token");
+                var response = client.GetStringAsync(new Uri(url));
+
+                if (response == null)
+                {
+                    return;
+                }
+                var recipes = SavedRecipesPage.parseRecipes(response.Result);
+                SavedRecipesPage.lv2.ItemsSource = null;
+                SavedRecipesPage.lv2.ItemsSource = recipes;
             };
             Button uncomplete = new Button
             {
@@ -62,6 +88,7 @@ namespace KitchenSupport
             };
             uncomplete.Clicked += (sender, e) =>
             {
+                SavedRecipesPage.listChanged = true;
                 var compClient = new HttpClient();
                 string compUrl = "http://api.kitchen.support/completed";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\",\n    \"value\" : " + "false" + "\n}";
@@ -73,6 +100,18 @@ namespace KitchenSupport
                 {
 
                 }
+                var client = new HttpClient();
+                var url = "http://api.kitchen.support/completed?offset=0&limit=30&api_token=";
+                url += DependencyService.Get<localDataInterface>().load("token");
+                var response = client.GetStringAsync(new Uri(url));
+
+                if (response == null)
+                {
+                    return;
+                }
+                var recipes = SavedRecipesPage.parseRecipes(response.Result);
+                SavedRecipesPage.lv3.ItemsSource = null;
+                SavedRecipesPage.lv3.ItemsSource = recipes;
             };
             string[] ratingImageLinks = new string[] { "http://i.imgur.com/7qq8zdR.png", "http://i.imgur.com/BRwowMP.png", "http://i.imgur.com/dNUdKiO.png", "http://i.imgur.com/zK4JmCG.png", "http://i.imgur.com/61WSiZf.png", "http://i.imgur.com/7J7BYuv.png" };
             var ratingImage = new Image { Aspect = Aspect.AspectFit };
@@ -176,6 +215,7 @@ namespace KitchenSupport
             recipePic.Source = ImageSource.FromUri(new Uri(r.smallImageUrls[0].Substring(0, r.smallImageUrls[0].Length - 4)));
             tapImage.Tapped += (sender, e) =>
             {
+                SavedRecipesPage.listChanged = true;
                 var client = new HttpClient();
                 string url = "http://api.kitchen.support/favorites";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\"\n}";
@@ -204,6 +244,7 @@ namespace KitchenSupport
 
             markComplete.Clicked += (sender, e) =>
             {
+                SavedRecipesPage.listChanged = true;
                 var client = new HttpClient();
                 string url = "http://api.kitchen.support/completed";
                 string data = "{\n    \"api_token\" : \"" + DependencyService.Get<localDataInterface>().load("token") + "\",\n    \"recipe_id\" : \"" + r.id + "\"\n}";
