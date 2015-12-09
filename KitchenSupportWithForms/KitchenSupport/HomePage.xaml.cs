@@ -10,6 +10,9 @@ namespace KitchenSupport
         public HomePage()
         {
             this.Title = "  Kitchen.Support";
+            SavedRecipesPage.lv = new ListView();
+            SavedRecipesPage.lv2 = new ListView();
+            SavedRecipesPage.lv3 = new ListView();
             InitializeComponent();
         }
 

@@ -16,7 +16,7 @@ namespace KitchenSupport
     {
         public static ListView listview;
         public static List<ingredient> ingredients;
-
+        public static Label instructions;
         public static List<ingredient> parseIngredients(string request)
         {
             var result = JsonConvert.DeserializeObject<pantryResponse>(request);
@@ -31,7 +31,7 @@ namespace KitchenSupport
         {
             
             this.Title = "  Kitchen.Support";
-            Label instructions = new Label
+            instructions = new Label
             {
                 Text = "Tap on an ingredient to remove it"
             };
@@ -54,7 +54,7 @@ namespace KitchenSupport
             List<ingredient> ingredients = parseIngredients(response.Result);
             Label header = new Label
             {
-                Text = "Your Ingredients",
+                Text = "Your Pantry",
                 Font = Font.BoldSystemFontOfSize(50),
                 HorizontalOptions = LayoutOptions.Center
             };
@@ -62,7 +62,14 @@ namespace KitchenSupport
             {
                 RowHeight = 30
             };
-
+            if (ingredients.Count == 0)
+            {
+                instructions.Text = " ";
+                ingredient i = new ingredient();
+                i.term = "You have no ingredients in your pantry";
+                ingredients.Add(i);
+                listview.HeightRequest = 120;
+            }
             listview.ItemsSource = ingredients;
 
             listview.ItemTemplate = new DataTemplate(typeof(TextCell));
@@ -282,8 +289,11 @@ namespace KitchenSupport
                             //await DisplayAlert ("Scanner", token.ToString(), "OK");
                             //await storeToken(token.ToString());
                             //e1.Text = name;
-                            name.Contains("Peanut Butter");
-                            name = "peanut butter";
+                            if (name.Contains("Peanut Butter"))
+                            {
+                                name = "peanut butter";
+                            }
+                            
                             await Navigation.PushModalAsync(new NavigationPage(new SearchForIngredient(name)));
                             /*this.Content = new StackLayout
                             {
@@ -414,6 +424,10 @@ namespace KitchenSupport
                         ingredients = parseIngredients(response.Result);
                         IngredientView.listview.ItemsSource = null;
                         IngredientView.listview.ItemsSource = ingredients;
+                        if (IngredientView.instructions.Text == " ")
+                        {
+                            IngredientView.instructions.Text = "Tap on an ingredient to remove it";
+                        }
                         this.Content = new StackLayout
                        {
                            Spacing = 20,
