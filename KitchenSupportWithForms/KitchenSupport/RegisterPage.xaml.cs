@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 
 using Xamarin.Forms;
+using Newtonsoft.Json.Linq;
 
 namespace KitchenSupport
 {
@@ -30,6 +31,11 @@ namespace KitchenSupport
 
                 if (response.Result.StatusCode.ToString() == "OK")
                 {
+                    var message = response.Result.Content.ReadAsStringAsync().Result;
+                    var json = JObject.Parse(message);
+                    var token = json["api_token"];
+                    //await storeToken(token.ToString());
+                    DependencyService.Get<localDataInterface>().save("token", token.ToString());
                     Navigation.PushModalAsync(new NavigationPage(new HomePage()));
                 }
                 else

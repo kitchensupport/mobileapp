@@ -29,6 +29,7 @@ namespace KitchenSupport
         }
         public IngredientView()
         {
+            
             this.Title = "  Kitchen.Support";
             Label instructions = new Label
             {
@@ -281,8 +282,10 @@ namespace KitchenSupport
                             //await DisplayAlert ("Scanner", token.ToString(), "OK");
                             //await storeToken(token.ToString());
                             //e1.Text = name;
+                            name.Contains("Peanut Butter");
+                            name = "peanut butter";
                             await Navigation.PushModalAsync(new NavigationPage(new SearchForIngredient(name)));
-                            this.Content = new StackLayout
+                            /*this.Content = new StackLayout
                             {
                                 Spacing = 20,
                                 Padding = 50,
@@ -292,7 +295,7 @@ namespace KitchenSupport
                                     success,
                                     next
                                 }
-                            };
+                            };*/
                             //await Navigation.PushModalAsync (new NavigationPage(new HomePage()));
                         }
                         else
@@ -355,7 +358,7 @@ namespace KitchenSupport
                 {
                     Label header = new Label
                     {
-                        Text = "Sorry, there were no results for that search. Please try again.",
+                        Text = "Sorry, there were no results for " + term + ". Please try again.",
                         Font = Font.BoldSystemFontOfSize(30)
                     };
                     Content = new StackLayout

@@ -226,6 +226,18 @@ namespace KitchenSupport
                 {
 
                 }
+                client = new HttpClient();
+                url = "http://api.kitchen.support/favorites?offset=0&limit=30&api_token=";
+                url += DependencyService.Get<localDataInterface>().load("token");
+                var newResponse = client.GetStringAsync(new Uri(url));
+
+                if (newResponse == null)
+                {
+                    return;
+                }
+                var recipes = SavedRecipesPage.parseRecipes(newResponse.Result);
+                SavedRecipesPage.lv2.ItemsSource = null;
+                SavedRecipesPage.lv2.ItemsSource = recipes;
             };
             recipePic.GestureRecognizers.Add(tapImage);
 
@@ -255,6 +267,18 @@ namespace KitchenSupport
                 {
 
                 }
+                client = new HttpClient();
+                url = "http://api.kitchen.support/completed?offset=0&limit=30&api_token=";
+                url += DependencyService.Get<localDataInterface>().load("token");
+                var newResponse = client.GetStringAsync(new Uri(url));
+
+                if (response == null)
+                {
+                    return;
+                }
+                var recipes = SavedRecipesPage.parseRecipes(newResponse.Result);
+                SavedRecipesPage.lv3.ItemsSource = null;
+                SavedRecipesPage.lv3.ItemsSource = recipes;
 
             };
             int favorites = (int)r.favorites;

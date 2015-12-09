@@ -28,8 +28,8 @@ namespace KitchenSupport
 
             if (response.Result.StatusCode.ToString() == "OK")
             {
-                ContentPage conformationPage = new ConformationPage();
-                Navigation.PushModalAsync(conformationPage);
+                //ContentPage conformationPage = new ConformationPage();
+                Navigation.PopModalAsync();
             }
             else
             {
